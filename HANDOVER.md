@@ -57,7 +57,22 @@ Mentions légales :
 
 ## Déploiement
 
-Laissé au builder de déploiement : créer le projet Vercel relié au dépôt GitHub `Noah-Schartz-Forte/berberat-thenot`, renseigner les variables ci-dessus, vérifier `/api/contact` en preview. `vercel.json` porte déjà `cleanUrls`, `trailingSlash`, les en-têtes de sécurité et le cache immuable de `/fonts/` et `/_astro/`. `.vercelignore` exclut `ressources/`, `screenshots/` et `scripts/` (motifs ancrés).
+- Dépôt GitHub : https://github.com/Noah-Schartz-Forte/berberat-thenot (branche `main`).
+- Projet Vercel : `berberat-thenot` (équipe `noah-schartz-forte`, id `prj_GF5yg5eHlehUrGu19htKcQ8SFPtq`), relié au dépôt GitHub par l'intégration Git.
+- URL de production : https://berberat-thenot.vercel.app
+- Chaque push sur `main` déclenche un déploiement de production ; toute autre branche donne un déploiement de preview. Aucun déploiement manuel n'a été nécessaire.
+- `vercel.json` fixe le preset Astro (`framework`, `buildCommand`, `outputDirectory: dist`), `cleanUrls`, `trailingSlash`, les en-têtes de sécurité et le cache immuable de `/fonts/` et `/_astro/`. `.vercelignore` exclut `ressources/`, `screenshots/` et `scripts/` (motifs ancrés) ; le dossier `api/` est bien déployé.
+- Formulaire : la fonction répond sur `/api/contact/` (avec la barre finale, à cause de `trailingSlash`). Sans variables d'environnement, elle renvoie 503 `unconfigured` et la page affiche les numéros de téléphone.
+- Ajouter les variables (puis redéployer, par exemple avec un push ou `vercel redeploy` sur le dernier déploiement) :
+
+```
+vercel env add RESEND_API_KEY production
+vercel env add CONTACT_TO production
+vercel env add CONTACT_FROM production
+```
+
+  Répéter avec `preview` pour tester le formulaire sur les previews.
+- Vérifications avant livraison : `npm run build`, `npx astro check`, `npm run qa` (Playwright, 13 routes x 4 largeurs, formulaires, présélection `?besoin=`), `node ~/.claude/skills/realtest/scripts/run.mjs ./dist --out ressources/qa` (rapport dans `ressources/qa/REALTEST.md`).
 
 ## Structure du projet
 
@@ -65,6 +80,7 @@ Laissé au builder de déploiement : créer le projet Vercel relié au dépôt G
 api/contact.ts            fonction Vercel du formulaire (Resend + zod)
 public/                   polices, favicons, og.jpg, robots.txt, llms.txt
 scripts/og.mjs            génère og.jpg et les favicons PNG (npm run og)
+scripts/qa.mjs            contrôle Playwright du site construit (npm run qa)
 src/config.ts             source unique : sociétés, sites, chiffres, FLO, navigation, JSON-LD
 src/styles/tokens.css     tokens, @font-face, reset, utilitaires
 src/layouts/Base.astro    gabarit commun (SEO, Nav, Footer, scripts)
@@ -77,4 +93,4 @@ ressources/               PDF client, extractions brutes, rendus, MANIFEST, PALE
 DESIGN.md                 guide des composants et règles pour les builders de pages
 ```
 
-Commandes : `npm run dev`, `npm run build`, `npx astro check`, `npm run og`.
+Commandes : `npm run dev`, `npm run build`, `npx astro check`, `npm run qa`, `npm run og`.
