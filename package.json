@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "check": "astro check",
     "og": "node scripts/og.mjs",
-    "astro": "astro"
+    "astro": "astro",
+    "qa": "node scripts/qa.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

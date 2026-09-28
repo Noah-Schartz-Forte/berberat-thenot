@@ -19,15 +19,32 @@ Dépôt : https://github.com/Noah-Schartz-Forte/berberat-thenot
 
 ## À valider avec le client
 
+Contenu et chiffres :
+
 - Numéro exact de chaque site (les trois numéros affichés en pied de page : 03 29 78 78 78 Varney, 03 29 70 10 10 Cousances-les-Forges, 03 25 55 84 07 Bettancourt-la-Ferrée ; aucun numéro publié pour Saint-Dizier et Pompey).
-- LGS : adresse, activité détaillée et numéro 03 51 25 52 83 (seul le logo le mentionne).
-- Adresses e-mail de réception des formulaires (devis et candidatures, éventuellement distinctes).
+- Liste complète des 7 sites d'exploitation : 5 adresses vérifiées sont publiées (Varney, Cousances-les-Forges, Bettancourt-la-Ferrée, Saint-Dizier, Pompey), les deux autres manquent.
+- Horaires d'ouverture de Varney et de Cousances-les-Forges (seuls ceux de Bettancourt-la-Ferrée sont publiés).
+- « Plus de 60 ans » (texte du client) face à 1971 (55 ans) : confirmer le point de départ retenu.
 - Transports Thenot « depuis 2007 » : formulation du PDF à confirmer au regard du registre (date de création réelle ou date de reprise).
-- Liste exacte des 7 sites d'exploitation : 5 sont vérifiés (Varney, Cousances-les-Forges, Bettancourt-la-Ferrée, Saint-Dizier, Pompey).
+- Mention « matériel récent / renouvelé » sur /moyens et /histoire : à confirmer.
+- Autorisation de citer les marques de tracteurs (Renault, Volvo), aujourd'hui non nommées.
+- Parking sécurisé : quelle société l'exploite, sur quels sites, et si une capacité peut être publiée.
+- BTL : périmètre exact des prestations (gestion de stock, préparation de commandes, réception et expédition, formulés de façon générique sur le site).
+- LGS : adresse et périmètre exact du gardiennage (seul le numéro 03 51 25 52 83 est publié, il figure sur le logo).
+- Eurocap Transports : numéro de téléphone (aucun publié) et couverture de l'affrètement (le site indique le national uniquement ; l'international est-il couvert ?).
 - Services NON revendiqués sur le site tant que le client ne les confirme pas : cross-docking, température dirigée, et tout service absent du PDF.
-- Détail de l'offre logistique (le site parle de stockage, gestion de stock et préparation, sans plus).
 - Photos supplémentaires en haute définition (entrepôt intérieur, équipes, parking sécurisé) et droits d'utilisation.
-- Mentions légales : raison sociale, SIREN, siège, directeur de publication, hébergeur.
+
+Formulaires et données personnelles :
+
+- Adresses e-mail de réception des formulaires (devis et candidatures, éventuellement distinctes).
+- Durées de conservation : 3 ans pour les demandes de devis, 2 ans pour les candidatures (valeurs publiées dans la politique de confidentialité, à confirmer).
+
+Mentions légales :
+
+- Forme juridique, capital social et numéro RCS de chacune des six sociétés.
+- Nom du directeur de la publication.
+- Varney est-elle la bonne adresse pour l'éditeur du site et pour le responsable du traitement des données ?
 
 ## Ouvert
 
@@ -37,7 +54,6 @@ Dépôt : https://github.com/Noah-Schartz-Forte/berberat-thenot
   - `CONTACT_FROM` : expéditeur sur un domaine vérifié dans Resend.
   Tant que l'une manque, le formulaire répond 503 et renvoie vers le téléphone.
 - Changement de domaine : modifier `site` dans `astro.config.mjs` ET la ligne `Sitemap:` de `public/robots.txt` (et les URL de `public/llms.txt`).
-- Pages à construire par les autres builders : /le-groupe (ancres `#transports-berberat`, `#transports-thenot`, `#bte`, `#btl`, `#lgs`, `#eurocap` obligatoires), /histoire, /transport, /logistique, /services, /moyens, /groupement-flo, /recrutement, /contact (ancre `#devis`), /mentions-legales, /politique-de-confidentialite.
 
 ## Déploiement
 
