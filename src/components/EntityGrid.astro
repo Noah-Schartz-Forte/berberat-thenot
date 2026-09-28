@@ -33,6 +33,8 @@ const H = headingLevel === 2 ? 'h2' : 'h3';
             src={e.logo}
             alt={e.logoAlt}
             width={Math.min(480, e.logo.width)}
+            widths={[260, 480].filter((w) => w <= e.logo.width)}
+            sizes="260px"
             format="webp"
             quality={90}
             loading="lazy"

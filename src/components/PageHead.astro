@@ -10,7 +10,9 @@
 //     <Button slot="actions" href="#devis">Demander un devis</Button>
 //   </PageHead>
 //
-// Props: kicker?, title (plain text, uppercase via CSS), lead?, image?, alt?
+// Props: kicker?, title (plain text, uppercase via CSS; units such as m² are
+// wrapped automatically so they keep their case), titleHtml? (trusted HTML
+// override for the H1), lead?, image?, alt?
 // (required with image), crumbs? ([{label, href?}], a visual breadcrumb;
 // "Accueil" is prepended), position? (object-position of the photo).
 // Slot "actions": buttons under the lead.
@@ -19,6 +21,7 @@
 import type { ImageMetadata } from 'astro';
 import { Picture } from 'astro:assets';
 import { HALF_WIDTHS, HALF_SIZES, IMAGE_FORMATS, capWidths } from '../lib/images';
+import { withUnits } from '../lib/text';
 
 interface Crumb {
   label: string;
@@ -28,6 +31,7 @@ interface Crumb {
 export interface Props {
   kicker?: string;
   title: string;
+  titleHtml?: string;
   lead?: string;
   image?: ImageMetadata;
   alt?: string;
@@ -35,7 +39,7 @@ export interface Props {
   position?: string;
 }
 
-const { kicker, title, lead, image, alt = '', crumbs, position = 'center' } = Astro.props;
+const { kicker, title, titleHtml, lead, image, alt = '', crumbs, position = 'center' } = Astro.props;
 const trail: Crumb[] = crumbs ? [{ label: 'Accueil', href: '/' }, ...crumbs] : [];
 ---
 
@@ -60,7 +64,7 @@ const trail: Crumb[] = crumbs ? [{ label: 'Accueil', href: '/' }, ...crumbs] : [
         )
       }
       {kicker && <p class="kicker pagehead__kicker">{kicker}</p>}
-      <h1 id="page-title" class="h1 pagehead__title">{title}</h1>
+      <h1 id="page-title" class="h1 pagehead__title" set:html={titleHtml ?? withUnits(title)} />
       <span class="rule-red pagehead__rule" aria-hidden="true"></span>
       {lead && <p class="lead pagehead__lead">{lead}</p>}
       {Astro.slots.has('actions') && <div class="pagehead__actions"><slot name="actions" /></div>}

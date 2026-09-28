@@ -9,10 +9,15 @@
 //   </SectionHead>
 //
 // Props: kicker?, title, lead?, align? ('left' | 'center'), level? (2 | 3,
-// default 2), id? (heading id, for aria-labelledby on the section).
+// default 2), id? (heading id, for aria-labelledby on the section),
+// titleHtml? (trusted HTML override). Units such as m² in `title` are wrapped
+// automatically so the uppercase transform leaves them alone.
+import { withUnits } from '../lib/text';
+
 export interface Props {
   kicker?: string;
   title: string;
+  titleHtml?: string;
   lead?: string;
   align?: 'left' | 'center';
   level?: 2 | 3;
@@ -20,14 +25,14 @@ export interface Props {
   class?: string;
 }
 
-const { kicker, title, lead, align = 'left', level = 2, id, class: className } = Astro.props;
+const { kicker, title, titleHtml, lead, align = 'left', level = 2, id, class: className } = Astro.props;
 const Tag = level === 3 ? 'h3' : 'h2';
 ---
 
 <header class:list={['shead', `shead--${align}`, Astro.slots.has('action') && 'shead--action', className]}>
   <div class="shead__text">
     {kicker && <p class="kicker shead__kicker">{kicker}</p>}
-    <Tag id={id} class:list={[level === 3 ? 'h3' : 'h2', 'shead__title']}>{title}</Tag>
+    <Tag id={id} class:list={[level === 3 ? 'h3' : 'h2', 'shead__title']} set:html={titleHtml ?? withUnits(title)} />
     {lead && <p class="lead shead__lead">{lead}</p>}
   </div>
   {Astro.slots.has('action') && <div class="shead__action"><slot name="action" /></div>}

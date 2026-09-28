@@ -4,8 +4,8 @@
 // (repo-root /api, Node runtime, no Astro adapter).
 //
 // One endpoint, two forms, selected by the `type` field:
-//   devis        societe?, nom, email, telephone, besoin, message, consent
-//   candidature  nom, telephone, email, poste, message?, cv_url?, consent
+//   devis        societe, nom, email, telephone, besoin, message, consent
+//   candidature  nom, telephone, email, poste, message, cv_url?, consent
 // `_gotcha` is a honeypot: bots that fill it get a silent 200.
 //
 // Accepts JSON (the enhanced form, src/scripts/form.client.ts) or
@@ -92,7 +92,7 @@ const consent = z.preprocess(
 
 const devisSchema = z.object({
   type: z.literal('devis'),
-  societe: z.preprocess(emptyToUndefined, z.string().max(160, { error: 'Texte trop long.' }).optional()),
+  societe: requiredText(160, 'Indiquez le nom de votre société.'),
   nom,
   email,
   telephone,
@@ -114,8 +114,11 @@ const candidatureSchema = z.object({
   email,
   poste: z.enum(Object.keys(POSTES) as [keyof typeof POSTES], { error: 'Choisissez le poste visé.' }),
   message: z.preprocess(
-    (v) => (typeof v === 'string' && v.trim() === '' ? undefined : multiLine(v)),
-    z.string().max(5000, { error: 'Message trop long (5 000 caractères maximum).' }).optional()
+    multiLine,
+    z
+      .string({ error: 'Parlez-nous de votre parcours en quelques mots.' })
+      .min(1, { error: 'Parlez-nous de votre parcours en quelques mots.' })
+      .max(5000, { error: 'Message trop long (5 000 caractères maximum).' })
   ),
   cv_url: z.preprocess(
     emptyToUndefined,
@@ -189,7 +192,7 @@ function buildEmail(data: Payload): { subject: string; text: string } {
     add('Besoin', BESOINS[data.besoin]);
     lines.push('', 'Message :', data.message);
     lines.push('', 'Demande de devis envoyée depuis le site du Groupe Berberat Thenot.');
-    return { subject: `[Devis] ${BESOINS[data.besoin]}, ${data.societe ?? data.nom}`, text: lines.join('\n') };
+    return { subject: `[Devis] ${BESOINS[data.besoin]}, ${data.societe}`, text: lines.join('\n') };
   }
   add('Nom', data.nom);
   add('Téléphone', data.telephone);

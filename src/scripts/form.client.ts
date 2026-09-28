@@ -9,6 +9,7 @@
 //   - success: the form fields are replaced by the success panel (focused)
 //   - 503 (form not yet activated), 429, 502 or network error: the API
 //     message is shown with the three main phone numbers
+//   - `?besoin=` query parameter preselects the need (see preselectFromQuery)
 // No animation beyond the CSS state changes, so reduced motion is safe.
 
 type Control = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
@@ -220,6 +221,26 @@ function enhance(form: HTMLFormElement): void {
   });
 }
 
+// `?besoin=<value>` in the URL (e.g. /contact?besoin=gardiennage#devis)
+// preselects the matching option of <select name="besoin">. Unknown values
+// are ignored; a choice the visitor already made is never overwritten.
+function preselectFromQuery(form: HTMLFormElement): void {
+  let wanted: string | null = null;
+  try {
+    wanted = new URLSearchParams(window.location.search).get('besoin');
+  } catch {
+    return;
+  }
+  if (!wanted) return;
+  const select = form.querySelector<HTMLSelectElement>('select[name="besoin"]');
+  if (!select || select.value) return;
+  const match = Array.from(select.options).find((o) => o.value !== '' && o.value === wanted);
+  if (match) select.value = match.value;
+}
+
 export function initForms(): void {
-  document.querySelectorAll<HTMLFormElement>('form[data-form]').forEach(enhance);
+  document.querySelectorAll<HTMLFormElement>('form[data-form]').forEach((form) => {
+    preselectFromQuery(form);
+    enhance(form);
+  });
 }

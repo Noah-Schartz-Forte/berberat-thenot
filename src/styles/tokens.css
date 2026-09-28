@@ -343,6 +343,11 @@ strong {
   letter-spacing: var(--track-display);
   color: var(--fg);
 }
+/* Units such as "m²" keep their case inside uppercased headings and labels
+   (see src/lib/text.ts, withUnits). */
+.unit {
+  text-transform: none;
+}
 .display {
   font-size: var(--fs-display);
   line-height: var(--lh-tight);
