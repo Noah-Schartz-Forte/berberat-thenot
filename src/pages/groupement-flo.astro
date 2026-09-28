@@ -1,0 +1,180 @@
+---
+// /groupement-flo: membership of the national network.
+// Rhythm: dark head > dark figures (flush, like the home stats) > white text
+// > grey outbound block > white CTA.
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import SectionHead from '../components/SectionHead.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import FigureBand from '../components/pages/FigureBand.astro';
+import { FLO, SITE, NBSP } from '../config';
+import floTrailer from '../images/photos/flo-trailer.jpg';
+
+const points = [
+  {
+    title: 'Un réseau national',
+    text: 'Des sociétés de transport indépendantes réparties en France, pour répondre aux besoins de transport au-delà de nos trois départements.',
+  },
+  {
+    title: 'Un groupe qui reste familial',
+    text: `Membre du réseau, le groupe reste une entreprise familiale et indépendante de ${SITE.employees}${NBSP}collaborateurs, ancrée en Meuse, en Haute-Marne et en Meurthe-et-Moselle.`,
+  },
+  {
+    title: 'En complément de nos moyens',
+    text: `Le réseau complète les moyens propres du groupe${NBSP}: 90${NBSP}moteurs, 20${NBSP}000${NBSP}m² de stockage intérieur et 7${NBSP}sites d’exploitation.`,
+  },
+];
+---
+
+<Base
+  title="Membre du Groupement FLO"
+  description={`Le groupe est membre du Groupement FLO, France Lots Organisation${NBSP}: 101 sociétés indépendantes de transport et de logistique.`}
+  path="/groupement-flo"
+>
+  <PageHead
+    kicker="Appartenance"
+    title="Membre du Groupement FLO"
+    lead="Au niveau national, nous faisons partie du groupement France Lots Organisation qui regroupe 101 sociétés indépendantes."
+    image={floTrailer}
+    alt="Semi-remorque bâchée aux couleurs du Groupement FLO, sous un ciel bleu."
+    crumbs={[{ label: 'Groupement FLO' }]}
+  />
+
+  <FigureBand items={FLO.figures} title="Le Groupement FLO en chiffres" />
+
+  <section class="section" aria-labelledby="apport-titre">
+    <div class="container">
+      <SectionHead
+        id="apport-titre"
+        kicker="Pour nos clients"
+        title="Ce que cela apporte à nos clients"
+        lead="L’appartenance au Groupement FLO donne accès à un réseau national de transporteurs indépendants, tout en conservant un actionnariat local et familial."
+      />
+      <ul role="list" class="points">
+        {
+          points.map((p, i) => (
+            <li class="point reveal" data-reveal-delay={String(i * 80)}>
+              <span class="point__index" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3 class="point__title">{p.title}</h3>
+              <p class="point__text">{p.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--tight is-grey" aria-labelledby="site-flo-titre">
+    <div class="container out reveal">
+      <div>
+        <p class="kicker">{FLO.fullName}</p>
+        <h2 id="site-flo-titre" class="h3 out__title">Le site du Groupement FLO</h2>
+        <p class="out__text">Présentation du réseau, de ses membres et de ses chiffres, sur le site officiel du groupement.</p>
+      </div>
+      <a class="out__link" href={FLO.url} target="_blank" rel="noopener">
+        Découvrir le Groupement FLO
+        <Icon name="external" size={18} />
+        <span class="visually-hidden">(nouvel onglet)</span>
+      </a>
+    </div>
+  </section>
+
+  <CtaBand
+    title={`Un transport partout en France${NBSP}?`}
+    text={`Appelez directement le site le plus proche, ou décrivez votre besoin${NBSP}: nous revenons vers vous rapidement.`}
+  />
+</Base>
+
+<style>
+  .points {
+    display: grid;
+    border-top: 2px solid var(--rule-strong);
+  }
+  @media (min-width: 900px) {
+    .points {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: 40px;
+    }
+  }
+  .point {
+    display: grid;
+    align-content: start;
+    gap: 14px;
+    padding-block: 28px;
+    border-bottom: 1px solid var(--rule);
+  }
+  @media (min-width: 900px) {
+    .point {
+      border-bottom: 0;
+    }
+  }
+  .point__index {
+    font-size: clamp(2rem, 1.5rem + 1.6vw, 3rem);
+    font-weight: var(--fw-black);
+    line-height: 1;
+    color: var(--red);
+  }
+  .point__title {
+    font-size: 1.0625rem;
+    font-weight: var(--fw-black);
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+    text-transform: uppercase;
+  }
+  .point__text {
+    color: var(--fg-2);
+    max-width: 40ch;
+  }
+
+  .out {
+    display: grid;
+    gap: 24px;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .out {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 48px;
+    }
+  }
+  .out__title {
+    margin-top: 14px;
+  }
+  .out__text {
+    margin-top: 12px;
+    color: var(--fg-2);
+    max-width: 56ch;
+  }
+  .out__link {
+    display: inline-flex;
+    align-items: center;
+    justify-self: start;
+    gap: 10px;
+    min-height: 52px;
+    padding: 0 24px;
+    background: var(--ink);
+    color: #fff;
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition:
+      background-color var(--dur) var(--ease-std),
+      transform var(--dur-fast) var(--ease-out);
+  }
+  .out__link :global(svg) {
+    color: var(--red);
+  }
+  @media (hover: hover) {
+    .out__link:hover {
+      background: var(--ink-3);
+    }
+  }
+  .out__link:active {
+    transform: scale(0.98);
+  }
+</style>

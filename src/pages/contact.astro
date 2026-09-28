@@ -1,0 +1,151 @@
+---
+// /contact: sites vérifiés + schéma des départements, demande de devis, notice RGPD.
+// Rhythm: dark head > white sites > grey devis > white CTA recrutement.
+// The nav CTA points to /contact#devis: the section carries id="devis",
+// the <form> carries id="devis-form" (no duplicate id). The global
+// scroll-padding-top (tokens.css) plus the section padding keep the heading
+// clear of the sticky header.
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import SectionHead from '../components/SectionHead.astro';
+import SiteList from '../components/SiteList.astro';
+import DeptSchematic from '../components/DeptSchematic.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Button from '../components/Button.astro';
+import Form from '../components/Form.astro';
+import Field from '../components/Field.astro';
+import PhoneAside from '../components/pages/PhoneAside.astro';
+import { NBSP, SITES } from '../config';
+import warehouseAerial from '../images/photos/warehouse-aerial.jpg';
+---
+
+<Base
+  title="Contact et demande de devis"
+  description={`Un devis, une question, un besoin de stockage ou de gardiennage${NBSP}? Appelez le site le plus proche du Groupe Berberat Thenot ou écrivez-nous.`}
+  path="/contact"
+>
+  <PageHead
+    kicker="Contact"
+    title="Parlons de vos flux"
+    lead={`Un devis, une question, un besoin de stockage ou de gardiennage${NBSP}: appelez le site le plus proche ou écrivez-nous.`}
+    image={warehouseAerial}
+    alt="Vue aérienne de l’entrepôt Berberat Thenot Expertise, avec ses quais de chargement et son parking."
+    crumbs={[{ label: 'Contact' }]}
+    position="45% center"
+  >
+    <Button slot="actions" href="#devis" icon="arrow">Demander un devis</Button>
+    <Button slot="actions" href="#sites-titre" variant="outline">Nos sites</Button>
+  </PageHead>
+
+  <section class="section" aria-labelledby="sites-titre">
+    <div class="container">
+      <SectionHead
+        id="sites-titre"
+        kicker="Nos sites"
+        title="Appelez le site le plus proche"
+        lead="Adresses et lignes directes de nos sites en Meuse, Haute-Marne et Meurthe-et-Moselle."
+      />
+      <SiteList sites={SITES} columns={3} />
+      <div class="schema">
+        <DeptSchematic caption="Les sites du groupe dans ses trois départements (schéma, pas à l’échelle)." />
+      </div>
+    </div>
+  </section>
+
+  <section class="section is-grey devis" id="devis" aria-labelledby="devis-titre">
+    <div class="container">
+      <SectionHead
+        id="devis-titre"
+        kicker="Devis"
+        title="Demande de devis"
+        lead="Décrivez votre besoin en quelques lignes. Le site concerné vous répond rapidement."
+      />
+      <div class="devis__grid">
+        <div class="devis__form">
+          <Form type="devis" id="devis-form" submitLabel="Envoyer la demande">
+            <Field idPrefix="devis" name="societe" label="Société" required autocomplete="organization" />
+            <Field idPrefix="devis" name="nom" label="Nom et prénom" required autocomplete="name" />
+            <Field idPrefix="devis" name="email" label="E-mail" type="email" required autocomplete="email" />
+            <Field idPrefix="devis" name="telephone" label="Téléphone" type="tel" required autocomplete="tel" />
+            <Field
+              idPrefix="devis"
+              name="besoin"
+              label="Votre besoin"
+              as="select"
+              required
+              full
+              options={[
+                { value: 'transport', label: 'Transport' },
+                { value: 'logistique', label: 'Logistique et entreposage' },
+                { value: 'gardiennage', label: 'Gardiennage et parking sécurisé' },
+                { value: 'autre', label: 'Autre' },
+              ]}
+            />
+            <Field
+              idPrefix="devis"
+              name="message"
+              label="Votre demande"
+              as="textarea"
+              required
+              minlength={10}
+              hint="Nature des marchandises, volumes, fréquence, lieux de départ et d’arrivée."
+            />
+          </Form>
+          <p class="rgpd">
+            Les informations transmises servent uniquement à répondre à votre demande. Elles sont conservées le temps
+            nécessaire à son traitement. Vous pouvez exercer vos droits d’accès, de rectification et d’effacement en
+            contactant le groupe. En savoir plus&nbsp;: <a href="/politique-de-confidentialite"
+              >politique de confidentialité</a
+            >.
+          </p>
+        </div>
+        <div class="devis__aside">
+          <PhoneAside
+            headingId="devis-tel"
+            text="Pour un besoin urgent, appelez directement l’un de nos trois sites principaux."
+            showHours
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    kicker="Recrutement"
+    title={`Vous cherchez un poste${NBSP}?`}
+    text={`Conducteurs SPL, exploitation, logistique et entrepôt${NBSP}: découvrez nos métiers et envoyez votre candidature.`}
+    button={{ label: 'Voir le recrutement', href: '/recrutement' }}
+    showPhones={false}
+  />
+</Base>
+
+<style>
+  .schema {
+    margin-top: clamp(2.5rem, 2rem + 2vw, 4rem);
+  }
+  .devis__grid {
+    display: grid;
+    gap: clamp(2rem, 1.5rem + 2vw, 3rem);
+  }
+  @media (min-width: 1024px) {
+    .devis__grid {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      gap: clamp(3rem, 1rem + 3vw, 5rem);
+      align-items: start;
+    }
+  }
+  .rgpd {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    max-width: 68ch;
+    font-size: var(--fs-small);
+    color: var(--fg-muted);
+    line-height: 1.6;
+  }
+  .rgpd a {
+    color: var(--fg);
+    text-decoration-color: var(--red);
+    text-underline-offset: 3px;
+  }
+</style>

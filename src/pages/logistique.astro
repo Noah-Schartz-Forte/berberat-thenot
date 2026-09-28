@@ -1,0 +1,264 @@
+---
+// /logistique: warehousing by Berberat Thenot Logistique. Rhythm: dark head >
+// white services > grey integrated chain > white sites > dark stats >
+// grey transport split > white CTA.
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Card from '../components/Card.astro';
+import SiteList from '../components/SiteList.astro';
+import StatBand from '../components/StatBand.astro';
+import SplitSection from '../components/SplitSection.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
+import { KEY_FIGURES, SITES, NBSP, type Stat } from '../config';
+
+import warehouseAerial from '../images/photos/warehouse-aerial.jpg';
+import yardDrone from '../images/photos/yard-drone.jpg';
+
+const M2 = `20${NBSP}000${NBSP}m²`;
+
+const services = [
+  {
+    icon: 'warehouse' as const,
+    title: 'Entreposage',
+    text: `${M2} de stockage intérieur pour accueillir vos marchandises, à Bettancourt-la-Ferrée et à Saint-Dizier.`,
+  },
+  {
+    icon: 'check' as const,
+    title: 'Gestion de stock',
+    text: 'Suivi des entrées, des sorties et des quantités en stock. Nous adaptons la prestation à vos flux.',
+  },
+  {
+    icon: 'exchange' as const,
+    title: 'Préparation de commandes',
+    text: 'Préparation de vos commandes à partir du stock, selon vos consignes et votre rythme d’expédition.',
+  },
+  {
+    icon: 'truck' as const,
+    title: 'Réception et expédition',
+    text: 'Réception de vos marchandises à quai, mise en stock, puis chargement au départ de l’entrepôt.',
+  },
+];
+
+const chain = [
+  {
+    step: 'Stocker',
+    who: 'Berberat Thenot Logistique',
+    text: `${M2} de stockage intérieur en Haute-Marne, à Bettancourt-la-Ferrée et à Saint-Dizier.`,
+  },
+  {
+    step: 'Préparer',
+    who: 'Berberat Thenot Logistique',
+    text: 'Gestion de stock et préparation de commandes, au plus près de vos flux.',
+  },
+  {
+    step: 'Livrer',
+    who: 'Berberat Thenot Expertise, Transports Berberat, Transports Thenot',
+    text: 'Les véhicules du groupe prennent le relais, du régional au national.',
+  },
+];
+
+const logisticsSites = SITES.filter((s) => s.id === 'bettancourt' || s.id === 'saint-dizier');
+
+const fig = (label: string): Stat => KEY_FIGURES.find((s) => s.label === label)!;
+const stats: Stat[] = [fig('de stockage intérieur'), fig("sites d'exploitation"), fig('collaborateurs')];
+---
+
+<Base
+  title="Logistique et entreposage"
+  description={`${M2} de stockage intérieur à Bettancourt-la-Ferrée et Saint-Dizier${NBSP}: entreposage, gestion de stock et préparation de commandes.`}
+  path="/logistique"
+>
+  <PageHead
+    kicker="Logistique & entreposage"
+    title={`${M2} de stockage intérieur`}
+    lead="Entreposage et prestations logistiques à Bettancourt-la-Ferrée et à Saint-Dizier, en Haute-Marne, par Berberat Thenot Logistique."
+    image={warehouseAerial}
+    alt="Vue aérienne de l’entrepôt Berberat Thenot Expertise, avec ses quais de chargement et son parking."
+    crumbs={[{ label: 'Logistique' }]}
+  >
+    <Button slot="actions" href="/contact#devis" icon="arrow">Demander un devis</Button>
+  </PageHead>
+
+  <section class="section" aria-labelledby="prestations-titre">
+    <div class="container">
+      <SectionHead
+        id="prestations-titre"
+        kicker="Nos prestations"
+        title="Stocker, gérer, préparer"
+        lead={`De la réception à l’expédition, nous adaptons la prestation à vos flux${NBSP}: volumes, fréquence, consignes.`}
+      />
+      <ul role="list" class="offers">
+        {
+          services.map((s, i) => (
+            <li class="reveal" data-reveal-delay={String(i * 70)}>
+              <Card {...s} index={String(i + 1).padStart(2, '0')} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section is-grey" aria-labelledby="integre-titre">
+    <div class="container">
+      <SectionHead
+        id="integre-titre"
+        kicker="Un seul partenaire"
+        title="Transport et logistique intégrés"
+        lead="L’entrepôt est adossé à la flotte du groupe. Vos marchandises sont stockées, préparées et livrées par un même partenaire, sans rupture entre deux prestataires."
+      />
+      <ol role="list" class="chain">
+        {
+          chain.map((c, i) => (
+            <li class="chain__step reveal" data-reveal-delay={String(i * 80)}>
+              <p class="chain__index" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
+              <h3 class="chain__title">{c.step}</h3>
+              <p class="chain__text">{c.text}</p>
+              <p class="chain__who">{c.who}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="sites-titre">
+    <div class="container sitesblock">
+      <div class="sitesblock__intro reveal">
+        <p class="kicker">Nos entrepôts</p>
+        <h2 id="sites-titre" class="h2 sitesblock__title">Deux sites en Haute-Marne</h2>
+        <p class="lead sitesblock__lead">
+          Berberat Thenot Logistique exploite ses surfaces de stockage à Bettancourt-la-Ferrée et à Saint-Dizier.
+        </p>
+        <a class="link-arrow sitesblock__link" href="/moyens">
+          Tous nos sites
+          <Icon name="arrow" />
+        </a>
+      </div>
+      <SiteList sites={logisticsSites} columns={2} />
+    </div>
+  </section>
+
+  <StatBand items={stats} chip="Parking sécurisé" title="La logistique en chiffres" />
+
+  <SplitSection
+    id="transport"
+    image={yardDrone}
+    alt="Parc de stationnement des Transports Thenot, rangée de camions noirs et blancs devant le hangar."
+    kicker="Transport routier"
+    title="La flotte du groupe prend le relais"
+    tone="grey"
+    ratio="16 / 10"
+    position="62% center"
+  >
+    <p>
+      Une fois préparées, vos marchandises partent avec les véhicules du groupe&nbsp;: 90&nbsp;moteurs, en lots complets
+      ou partiels, du régional au national.
+    </p>
+    <Button slot="actions" href="/transport" variant="dark" icon="arrow">Le transport</Button>
+  </SplitSection>
+
+  <CtaBand
+    kicker="Devis logistique"
+    title={`Un projet logistique${NBSP}?`}
+    text={`Décrivez vos volumes et vos flux${NBSP}: nous revenons vers vous avec une prestation adaptée.`}
+    button={{ label: 'Demander un devis', href: '/contact#devis' }}
+  />
+</Base>
+
+<style>
+  .offers {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 640px) {
+    .offers {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1100px) {
+    .offers {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px;
+    }
+  }
+
+  .chain {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 900px) {
+    .chain {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0;
+      border-left: 1px solid var(--rule);
+    }
+  }
+  .chain__step {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: clamp(1.5rem, 1.2rem + 1.2vw, 2.5rem);
+    background: var(--panel);
+    border-top: 3px solid var(--red);
+  }
+  @media (min-width: 900px) {
+    .chain__step {
+      border-right: 1px solid var(--rule);
+    }
+  }
+  .chain__index {
+    font-size: var(--fs-small);
+    font-weight: var(--fw-black);
+    letter-spacing: 0.1em;
+    color: var(--fg-muted);
+  }
+  .chain__title {
+    font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem);
+    font-weight: var(--fw-black);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+  .chain__text {
+    color: var(--fg-2);
+  }
+  .chain__who {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+    font-size: var(--fs-micro);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.1em;
+    line-height: 1.5;
+    text-transform: uppercase;
+    color: var(--fg);
+  }
+
+  .sitesblock {
+    display: grid;
+    gap: clamp(2.5rem, 2rem + 2vw, 4rem);
+  }
+  @media (min-width: 1024px) {
+    .sitesblock {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+      gap: clamp(3rem, 1rem + 4vw, 6rem);
+      align-items: start;
+    }
+  }
+  .sitesblock__title {
+    margin-top: 16px;
+    max-width: 14ch;
+    text-wrap: balance;
+  }
+  .sitesblock__lead {
+    margin-top: 20px;
+    max-width: 40ch;
+  }
+  .sitesblock__link {
+    margin-top: 28px;
+  }
+</style>

@@ -1,0 +1,98 @@
+---
+// Page-scoped figure band for values that are not plain integers
+// (e.g. "1,3 Md€", "1,5 M m²"), styled like StatBand but without count-up.
+// Used on /groupement-flo. Values are server-rendered as given.
+//
+//   <FigureBand items={[{ value: '101', label: 'sociétés indépendantes' }]} />
+//
+// Props: items ({ value, label }[]), tone? ('dark' default | 'light' | 'grey'),
+// title? (accessible name of the band).
+export interface Props {
+  items: readonly { value: string; label: string }[];
+  tone?: 'dark' | 'light' | 'grey';
+  title?: string;
+}
+
+const { items, tone = 'dark', title = 'Chiffres clés' } = Astro.props;
+const toneClass = tone === 'dark' ? 'is-dark' : tone === 'grey' ? 'is-grey' : '';
+---
+
+<section class:list={['figs', toneClass]} aria-label={title}>
+  <div class="container container--wide">
+    <dl class="figs__list">
+      {
+        items.map((f, i) => (
+          <div class="figs__item reveal" data-reveal-delay={String(i * 60)}>
+            <dt class="figs__label">{f.label}</dt>
+            <dd class="figs__value">{f.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .figs {
+    background: var(--bg);
+    color: var(--fg);
+    padding-block: clamp(3rem, 2.2rem + 3.4vw, 5rem);
+  }
+  .figs__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 16px;
+  }
+  @media (min-width: 720px) {
+    .figs__list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: 32px;
+    }
+  }
+  @media (min-width: 1200px) {
+    .figs__list {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      column-gap: 40px;
+    }
+    .figs__value {
+      font-size: clamp(2rem, 0.6rem + 2vw, 2.625rem);
+    }
+  }
+  .figs__item {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-block: 22px;
+    border-top: 1px solid var(--rule);
+    min-width: 0;
+  }
+  .figs__value {
+    font-size: clamp(1.75rem, 1.1rem + 2.2vw, 3rem);
+    font-weight: var(--fw-black);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    color: var(--fg);
+  }
+  .figs__label {
+    position: relative;
+    padding-left: 18px;
+    font-size: var(--fs-micro);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.12em;
+    line-height: 1.45;
+    text-transform: uppercase;
+    color: var(--fg-2);
+  }
+  .figs__label::before {
+    content: '';
+    position: absolute;
+    top: 0.35em;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    background: var(--red);
+  }
+</style>

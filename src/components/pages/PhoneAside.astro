@@ -1,0 +1,129 @@
+---
+// Page-scoped: "Ou par téléphone" panel shown next to a form on /contact and
+// /recrutement. Solid dark block, the three main sites' phones as tel: links.
+//
+//   <PhoneAside title="Ou par téléphone" text="..." showHours />
+//
+// Props: title, text?, showHours? (adds the verified BTE et BTL hours for
+// Bettancourt-la-Ferrée only), headingId?.
+import { MAIN_SITES } from '../../config';
+import Icon from '../Icon.astro';
+
+export interface Props {
+  title?: string;
+  text?: string;
+  showHours?: boolean;
+  headingId?: string;
+}
+
+const { title = 'Ou par téléphone', text, showHours = false, headingId } = Astro.props;
+---
+
+<aside class="phones is-dark" aria-labelledby={headingId}>
+  <p class="kicker">Appel direct</p>
+  <h3 class="phones__title" id={headingId}>{title}</h3>
+  {text && <p class="phones__text">{text}</p>}
+  <ul role="list" class="phones__list">
+    {
+      MAIN_SITES.map((s) => (
+        <li class="phones__item">
+          <a class="phones__tel" href={s.phone!.href}>
+            <Icon name="phone" size={20} />
+            <span class="phones__num">{s.phone!.display}</span>
+          </a>
+          <p class="phones__who">
+            {s.name}
+            <span>{s.address.locality} ({s.address.postalCode.slice(0, 2)})</span>
+          </p>
+          {showHours && s.id === 'bettancourt' && (
+            <p class="phones__hours">
+              <Icon name="clock" size={16} />
+              <span>Du lundi au vendredi, de 8&nbsp;h à 12&nbsp;h et de 14&nbsp;h à 17&nbsp;h</span>
+            </p>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</aside>
+
+<style>
+  .phones {
+    padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    background: var(--ink);
+    border-top: 4px solid var(--red);
+    color: var(--fg);
+  }
+  .phones__title {
+    margin-top: 14px;
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-black);
+    line-height: 1.15;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .phones__text {
+    margin-top: 12px;
+    font-size: var(--fs-small);
+    color: var(--fg-2);
+    line-height: 1.6;
+  }
+  .phones__list {
+    margin-top: 24px;
+    border-top: 1px solid var(--rule);
+  }
+  .phones__item {
+    padding-block: 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .phones__tel {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    color: #fff;
+    text-decoration: none;
+    font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+    font-weight: var(--fw-black);
+    white-space: nowrap;
+  }
+  .phones__tel :global(svg) {
+    flex: none;
+    color: var(--red);
+  }
+  @media (hover: hover) {
+    .phones__tel:hover .phones__num {
+      text-decoration: underline;
+      text-decoration-color: var(--red);
+      text-underline-offset: 4px;
+    }
+  }
+  .phones__who {
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    color: var(--fg);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .phones__who span {
+    display: block;
+    margin-top: 2px;
+    font-weight: var(--fw-regular);
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--fg-muted);
+  }
+  .phones__hours {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    margin-top: 10px;
+    font-size: var(--fs-small);
+    color: var(--fg-2);
+  }
+  .phones__hours :global(svg) {
+    flex: none;
+    margin-top: 3px;
+    color: var(--red);
+  }
+</style>

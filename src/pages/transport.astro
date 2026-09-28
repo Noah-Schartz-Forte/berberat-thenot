@@ -1,0 +1,278 @@
+---
+// /transport: road freight. Rhythm: dark head > white offer cards >
+// grey companies > white reasons > dark stats > grey fleet split > white CTA.
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Card from '../components/Card.astro';
+import EntityGrid from '../components/EntityGrid.astro';
+import StatBand from '../components/StatBand.astro';
+import SplitSection from '../components/SplitSection.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
+import { ENTITIES, KEY_FIGURES, FLO, NBSP, type Stat } from '../config';
+
+import yardDrone from '../images/photos/yard-drone.jpg';
+import volvoFh from '../images/photos/volvo-fh.jpg';
+
+const offers = [
+  {
+    icon: 'truck' as const,
+    title: 'Lots complets',
+    text: 'Un chargement, un véhicule, un trajet direct du point d’enlèvement au point de livraison.',
+  },
+  {
+    icon: 'exchange' as const,
+    title: 'Lots partiels',
+    text: 'Des volumes qui ne remplissent pas une semi-remorque, pris en charge avec la même exigence.',
+  },
+  {
+    icon: 'pin' as const,
+    title: 'Transport régional',
+    text: 'En Meuse, en Haute-Marne, en Meurthe-et-Moselle et dans le Grand Est, au départ de nos sites.',
+  },
+  {
+    icon: 'arrow' as const,
+    title: 'Transport national',
+    text: `Au niveau national, avec l’appui du réseau du Groupement FLO et de ses ${FLO.figures[0].value}${NBSP}sociétés indépendantes.`,
+    href: '/groupement-flo',
+    linkLabel: 'Le Groupement FLO',
+  },
+];
+
+const transportSlugs = ['transports-berberat', 'transports-thenot', 'bte', 'eurocap'];
+const transportEntities = transportSlugs.map((slug) => ENTITIES.find((e) => e.slug === slug)!);
+
+const reasons = [
+  {
+    title: 'La proximité avec nos clients',
+    text: 'Des sites en Meuse, en Haute-Marne et en Meurthe-et-Moselle, au plus près de vos flux.',
+  },
+  {
+    title: 'La qualité de service',
+    text: 'Une exigence portée depuis 1971. Berberat Thenot Expertise est certifiée ISO 9001.',
+  },
+  {
+    title: 'Un savoir-faire reconnu',
+    text: 'Le transport routier de marchandises est notre métier depuis plus de cinquante ans.',
+  },
+  {
+    title: 'Un parc de 90 moteurs',
+    text: 'Des tracteurs routiers et des semi-remorques exploités par les sociétés du groupe.',
+  },
+  {
+    title: 'Du matériel récent',
+    text: 'Des tracteurs et des semi-remorques récents, pour rouler dans de bonnes conditions.',
+  },
+  {
+    title: '7 sites d’exploitation',
+    text: 'Répartis sur trois départements, pour organiser vos transports au départ du bon site.',
+  },
+  {
+    title: 'Le réseau national FLO',
+    text: `${FLO.figures[0].value}${NBSP}sociétés indépendantes réunies au sein du Groupement FLO.`,
+  },
+];
+
+const fig = (label: string): Stat => KEY_FIGURES.find((s) => s.label === label)!;
+const stats: Stat[] = [fig('moteurs'), fig("sites d'exploitation"), fig('départements'), fig('collaborateurs')];
+---
+
+<Base
+  title="Transport routier de marchandises"
+  description="Transport routier de marchandises en lots complets et partiels, en régional et en national, par un groupe familial de 90 moteurs installé depuis 1971."
+  path="/transport"
+>
+  <PageHead
+    kicker="Transport routier de marchandises"
+    title="Le transport, notre métier depuis 1971"
+    lead="Transport routier de marchandises en lots complets et en lots partiels, du régional au national, par un groupe familial de 90 moteurs."
+    image={yardDrone}
+    alt="Parc de stationnement des Transports Thenot, rangée de camions noirs et blancs devant le hangar."
+    crumbs={[{ label: 'Transport' }]}
+    position="62% center"
+  >
+    <Button slot="actions" href="/contact#devis" icon="arrow">Demander un devis</Button>
+  </PageHead>
+
+  <section class="section" aria-labelledby="offre-titre">
+    <div class="container">
+      <SectionHead
+        id="offre-titre"
+        kicker="Nos prestations"
+        title="Ce que nous transportons"
+        lead={`Des lots complets aux lots partiels, du régional au national${NBSP}: le groupe organise vos transports avec ses propres moyens.`}
+      />
+      <ul role="list" class="offers">
+        {
+          offers.map((o, i) => (
+            <li class="reveal" data-reveal-delay={String(i * 70)}>
+              <Card {...o} index={String(i + 1).padStart(2, '0')} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section is-grey" aria-labelledby="societes-titre">
+    <div class="container">
+      <SectionHead
+        id="societes-titre"
+        kicker="Le groupe"
+        title="Nos sociétés de transport"
+        lead="Quatre sociétés du groupe réalisent et organisent vos transports, chacune avec son site et ses équipes."
+      >
+        <a slot="action" class="link-arrow" href="/le-groupe">
+          Les six sociétés du groupe
+          <Icon name="arrow" />
+        </a>
+      </SectionHead>
+      <div class="entities4">
+        <EntityGrid entities={transportEntities} showContact />
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="pourquoi-titre">
+    <div class="container why">
+      <div class="why__intro reveal">
+        <p class="kicker">Nos engagements</p>
+        <h2 id="pourquoi-titre" class="h2 why__title">Pourquoi nous confier vos flux</h2>
+        <p class="lead why__lead">
+          Un groupe familial, des moyens en propre et un réseau national&nbsp;: ce qui fait la différence au quotidien.
+        </p>
+      </div>
+      <ol role="list" class="why__list">
+        {
+          reasons.map((r, i) => (
+            <li class="why__item reveal" data-reveal-delay={String((i % 2) * 70)}>
+              <span class="why__index" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3 class="why__h3">{r.title}</h3>
+                <p class="why__text">{r.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <StatBand items={stats} title="Le transport en chiffres" />
+
+  <SplitSection
+    id="flotte"
+    image={volvoFh}
+    alt="Tracteur routier noir et sa semi-remorque, à l’arrêt en bord de route."
+    kicker="Nos moyens"
+    title="Un parc de 90 moteurs"
+    tone="grey"
+    reverse
+    ratio="4 / 5"
+    position="50% 60%"
+  >
+    <p>
+      Le groupe exploite son propre parc de 90&nbsp;moteurs&nbsp;: des tracteurs routiers attelés à des semi-remorques,
+      répartis sur ses sites d’exploitation.
+    </p>
+    <p>
+      Des moyens en propre, c’est une maîtrise directe de vos transports, du chargement jusqu’à la livraison.
+    </p>
+    <Button slot="actions" href="/moyens" variant="dark" icon="arrow">Nos moyens</Button>
+  </SplitSection>
+
+  <CtaBand
+    kicker="Devis transport"
+    title={`Un transport à organiser${NBSP}?`}
+    text={`Lot complet ou lot partiel, régional ou national${NBSP}: décrivez votre besoin, ou appelez directement le site le plus proche.`}
+    button={{ label: 'Demander un devis', href: '/contact#devis' }}
+  />
+</Base>
+
+<style>
+  .offers {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 640px) {
+    .offers {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1100px) {
+    .offers {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px;
+    }
+  }
+
+  /* Four company cards: 2 x 2 instead of the component's 3 + 1. */
+  @media (min-width: 1024px) {
+    .entities4 :global(.entities) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .why {
+    display: grid;
+    gap: clamp(2.5rem, 2rem + 2vw, 4rem);
+  }
+  @media (min-width: 1024px) {
+    .why {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.5fr);
+      gap: clamp(3rem, 1rem + 4vw, 6rem);
+      align-items: start;
+    }
+    .why__intro {
+      position: sticky;
+      top: 120px;
+    }
+  }
+  .why__title {
+    margin-top: 16px;
+    max-width: 14ch;
+    text-wrap: balance;
+  }
+  .why__lead {
+    margin-top: 20px;
+    max-width: 40ch;
+  }
+  .why__list {
+    display: grid;
+    border-top: 2px solid var(--rule-strong);
+  }
+  @media (min-width: 640px) {
+    .why__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 40px;
+    }
+  }
+  .why__item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 18px;
+    padding-block: 24px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .why__index {
+    font-size: var(--fs-small);
+    font-weight: var(--fw-black);
+    letter-spacing: 0.1em;
+    line-height: 1.7;
+    color: var(--accent-text);
+  }
+  .why__h3 {
+    font-size: 1rem;
+    font-weight: var(--fw-black);
+    letter-spacing: 0.02em;
+    line-height: 1.35;
+    text-transform: uppercase;
+  }
+  .why__text {
+    margin-top: 8px;
+    font-size: var(--fs-small);
+    color: var(--fg-2);
+  }
+</style>

@@ -1,0 +1,250 @@
+---
+// /recrutement: métiers, raisons de rejoindre le groupe, chiffres, candidature spontanée.
+// Rhythm: dark head > white métiers > grey raisons > dark chiffres > white candidature > grey CTA.
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Pillars from '../components/Pillars.astro';
+import StatBand from '../components/StatBand.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Button from '../components/Button.astro';
+import Form from '../components/Form.astro';
+import Field from '../components/Field.astro';
+import PhoneAside from '../components/pages/PhoneAside.astro';
+import { NBSP, type Stat } from '../config';
+import yardDrone from '../images/photos/yard-drone.jpg';
+
+const metiers = [
+  {
+    icon: 'truck' as const,
+    title: 'Conducteur SPL',
+    text: 'Transport régional et national au volant de tracteurs et semi-remorques récents, comme ceux de nos parcs.',
+    items: ['Transport régional et national', 'Matériel récent', 'Tracteurs et semi-remorques'],
+  },
+  {
+    icon: 'exchange' as const,
+    title: 'Exploitation',
+    text: 'Organiser les tournées, suivre les conducteurs et répondre aux clients au quotidien.',
+    items: ['Agent d’exploitation', 'Planning', 'Relation clients'],
+  },
+  {
+    icon: 'warehouse' as const,
+    title: 'Logistique et entrepôt',
+    text: `Faire vivre les flux de marchandises sur 20${NBSP}000${NBSP}m² de stockage intérieur.`,
+    items: ['Préparation de commandes', 'Gestion de stock', 'Réception et expédition'],
+  },
+];
+
+const raisons = [
+  {
+    title: 'Un groupe familial depuis 1971',
+    text: 'Les Transports Berberat puis les Transports Thenot ont construit le groupe en conservant leurs valeurs familiales.',
+  },
+  {
+    title: 'La proximité',
+    text: '7 sites d’exploitation en Meuse, Haute-Marne et Meurthe-et-Moselle. On travaille près de chez soi et on rentre chez soi.',
+  },
+  {
+    title: 'Du matériel récent',
+    text: 'Des tracteurs et des semi-remorques récents, pour travailler dans de bonnes conditions.',
+  },
+  {
+    title: 'Un groupe qui se développe',
+    text: '110 collaborateurs aujourd’hui, dans un groupe qui poursuit son développement.',
+  },
+  {
+    title: 'Le réseau Groupement FLO',
+    text: 'Membre du Groupement FLO, le groupe s’appuie sur un réseau national de transporteurs indépendants.',
+  },
+];
+
+const chiffres: Stat[] = [
+  { value: 110, label: 'collaborateurs' },
+  { value: 90, label: 'moteurs' },
+  { value: 7, label: 'sites d’exploitation' },
+  { value: 3, label: 'départements' },
+];
+---
+
+<Base
+  title="Recrutement"
+  description={`Conducteurs SPL, exploitation, logistique et entrepôt${NBSP}: le Groupe Berberat Thenot recrute en Meuse, Haute-Marne et Meurthe-et-Moselle.`}
+  path="/recrutement"
+>
+  <PageHead
+    kicker="Recrutement"
+    title="Rejoindre un groupe familial de 110 collaborateurs"
+    lead={`Conducteurs SPL, exploitation, logistique et entrepôt${NBSP}: nous recrutons en Meuse, Haute-Marne et Meurthe-et-Moselle.`}
+    image={yardDrone}
+    alt="Parc de stationnement des Transports Thenot vu du ciel : une rangée de camions noirs et blancs devant le hangar."
+    crumbs={[{ label: 'Recrutement' }]}
+    position="70% center"
+  >
+    <Button slot="actions" href="#candidature" icon="arrow">Postuler</Button>
+    <Button slot="actions" href="#metiers-titre" variant="outline">Nos métiers</Button>
+  </PageHead>
+
+  <section class="section" aria-labelledby="metiers-titre">
+    <div class="container">
+      <SectionHead
+        id="metiers-titre"
+        kicker="Nos métiers"
+        title="Les métiers"
+        lead="Trois familles de métiers, sur la route, au bureau d’exploitation et en entrepôt."
+      />
+      <Pillars items={metiers} />
+    </div>
+  </section>
+
+  <section class="section is-grey" aria-labelledby="raisons-titre">
+    <div class="container why">
+      <div class="why__head">
+        <SectionHead
+          id="raisons-titre"
+          kicker="Le groupe"
+          title="Pourquoi nous rejoindre"
+          lead="Un groupe à taille humaine, ancré dans son territoire."
+        />
+      </div>
+      <ol role="list" class="why__list">
+        {
+          raisons.map((r, i) => (
+            <li class="why__item reveal" data-reveal-delay={String(i * 60)}>
+              <span class="why__index" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3 class="why__title">{r.title}</h3>
+                <p class="why__text">{r.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <StatBand items={chiffres} title="Le groupe en chiffres" />
+
+  <section class="section apply" id="candidature" aria-labelledby="candidature-titre">
+    <div class="container">
+      <SectionHead
+        id="candidature-titre"
+        kicker="Postuler"
+        title="Candidature spontanée"
+        lead="Laissez-nous vos coordonnées et quelques mots sur votre parcours. Nous revenons vers vous."
+      />
+      <div class="apply__grid">
+        <div class="apply__form">
+          <Form type="candidature" id="candidature-form" submitLabel="Envoyer ma candidature">
+            <Field idPrefix="candidature" name="nom" label="Nom et prénom" required autocomplete="name" />
+            <Field idPrefix="candidature" name="telephone" label="Téléphone" type="tel" required autocomplete="tel" />
+            <Field idPrefix="candidature" name="email" label="E-mail" type="email" required autocomplete="email" />
+            <Field
+              idPrefix="candidature"
+              name="poste"
+              label="Poste visé"
+              as="select"
+              required
+              options={[
+                { value: 'conducteur-spl', label: 'Conducteur SPL' },
+                { value: 'exploitation', label: 'Exploitation' },
+                { value: 'logistique-entrepot', label: 'Logistique et entrepôt' },
+                { value: 'autre', label: 'Autre' },
+              ]}
+            />
+            <Field
+              idPrefix="candidature"
+              name="message"
+              label="Votre message"
+              as="textarea"
+              required
+              hint="Parlez-nous de votre parcours et de vos disponibilités."
+            />
+            <Field
+              idPrefix="candidature"
+              name="cv_url"
+              label="Lien vers votre CV"
+              type="url"
+              full
+              inputmode="url"
+              placeholder="https://"
+              hint="Lien vers votre CV en ligne, facultatif."
+            />
+          </Form>
+        </div>
+        <div class="apply__aside">
+          <PhoneAside
+            headingId="candidature-tel"
+            text={`Vous préférez nous parler de vive voix${NBSP}? Les candidatures par téléphone sont les bienvenues${NBSP}: appelez le site le plus proche de chez vous.`}
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    tone="grey"
+    kicker="Le groupe"
+    title={`Mieux connaître le groupe${NBSP}?`}
+    text="Six sociétés, sept sites d’exploitation et une histoire commencée en 1971 en Meuse."
+    button={{ label: 'Découvrir le groupe', href: '/le-groupe' }}
+    showPhones={false}
+  />
+</Base>
+
+<style>
+  .why {
+    display: grid;
+    gap: clamp(2rem, 1.5rem + 2vw, 3rem);
+  }
+  @media (min-width: 1024px) {
+    .why {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      gap: clamp(3rem, 1rem + 4vw, 6rem);
+      align-items: start;
+    }
+    .why__head :global(h2) {
+      max-width: 12ch;
+    }
+  }
+  .why__list {
+    border-top: 1px solid var(--rule-strong);
+  }
+  .why__item {
+    display: grid;
+    grid-template-columns: 3.25rem minmax(0, 1fr);
+    gap: 16px;
+    padding-block: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+    border-bottom: 1px solid var(--rule);
+  }
+  .why__index {
+    font-size: 1.5rem;
+    font-weight: var(--fw-black);
+    line-height: 1.1;
+    color: var(--red);
+    font-variant-numeric: tabular-nums;
+  }
+  .why__title {
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-black);
+    line-height: 1.2;
+    text-transform: uppercase;
+    color: var(--fg);
+  }
+  .why__text {
+    margin-top: 8px;
+    color: var(--fg-2);
+    max-width: 56ch;
+  }
+
+  .apply__grid {
+    display: grid;
+    gap: clamp(2rem, 1.5rem + 2vw, 3rem);
+  }
+  @media (min-width: 1024px) {
+    .apply__grid {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      gap: clamp(3rem, 1rem + 3vw, 5rem);
+      align-items: start;
+    }
+  }
+</style>

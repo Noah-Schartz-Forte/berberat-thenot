@@ -1,0 +1,125 @@
+---
+// Page-scoped long-form wrapper for the legal pages (/mentions-legales,
+// /politique-de-confidentialite). Narrow column, uppercase h2 sections with a
+// red mark, proper lists and links.
+//
+//   <LegalArticle updated="28 septembre 2026"> <h2>...</h2><p>...</p> </LegalArticle>
+export interface Props {
+  updated?: string;
+}
+const { updated } = Astro.props;
+---
+
+<section class="section legal">
+  <div class="container legal__wrap">
+    <article class="legal__body">
+      <slot />
+      {updated && <p class="legal__updated">Dernière mise à jour&nbsp;: {updated}</p>}
+    </article>
+  </div>
+</section>
+
+<style>
+  .legal__wrap {
+    max-width: calc(760px + 2 * var(--gutter));
+  }
+  .legal__body {
+    color: var(--fg-2);
+    line-height: 1.7;
+  }
+  .legal__body :global(h2) {
+    position: relative;
+    margin-top: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
+    font-weight: var(--fw-black);
+    line-height: 1.2;
+    text-transform: uppercase;
+    color: var(--fg);
+    text-wrap: balance;
+  }
+  .legal__body :global(h2)::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 0;
+    width: 48px;
+    height: 3px;
+    background: var(--red);
+  }
+  .legal__body :global(h2:first-child) {
+    margin-top: 0;
+  }
+  .legal__body :global(h3) {
+    margin-top: 24px;
+    font-size: 1rem;
+    font-weight: var(--fw-bold);
+    color: var(--fg);
+  }
+  .legal__body :global(p),
+  .legal__body :global(ul),
+  .legal__body :global(dl) {
+    margin-top: 14px;
+  }
+  .legal__body :global(ul) {
+    display: grid;
+    gap: 8px;
+    padding-left: 0;
+    list-style: none;
+  }
+  .legal__body :global(ul li) {
+    position: relative;
+    padding-left: 22px;
+  }
+  .legal__body :global(ul li)::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.72em;
+    width: 8px;
+    height: 2px;
+    background: var(--red);
+  }
+  .legal__body :global(dl) {
+    display: grid;
+    gap: 4px 24px;
+  }
+  @media (min-width: 640px) {
+    .legal__body :global(dl) {
+      grid-template-columns: max-content 1fr;
+    }
+  }
+  .legal__body :global(dt) {
+    font-weight: var(--fw-bold);
+    color: var(--fg);
+  }
+  .legal__body :global(dd) {
+    margin: 0 0 8px;
+  }
+  @media (min-width: 640px) {
+    .legal__body :global(dd) {
+      margin: 0;
+    }
+  }
+  .legal__body :global(strong) {
+    color: var(--fg);
+  }
+  .legal__body :global(a) {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: var(--red);
+    text-underline-offset: 3px;
+    overflow-wrap: anywhere;
+  }
+  .legal__body :global(address) {
+    font-style: normal;
+  }
+  .legal__updated {
+    margin-top: clamp(2.5rem, 2rem + 2vw, 3.5rem) !important;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    font-size: var(--fs-small);
+    color: var(--fg-muted);
+  }
+</style>

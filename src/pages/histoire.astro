@@ -1,0 +1,106 @@
+---
+// /histoire: the verbatim history, the timeline, today's figures.
+// Rhythm: dark head > white narrative > dark timeline > grey figures >
+// white split > white CTA (ruled).
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Timeline from '../components/Timeline.astro';
+import StatBand from '../components/StatBand.astro';
+import SplitSection from '../components/SplitSection.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Button from '../components/Button.astro';
+import { HISTORY_TEXT, TIMELINE, SITE, NBSP, type Stat } from '../config';
+import archiveManSnow from '../images/photos/archive-man-snow.jpg';
+import yardDrone from '../images/photos/yard-drone.jpg';
+
+const today: Stat[] = [
+  { value: 20000, suffix: `${NBSP}m²`, label: 'de surface logistique', group: true },
+  { value: 90, label: 'moteurs' },
+  { value: 7, label: "sites d'exploitation" },
+];
+---
+
+<Base
+  title="Histoire du groupe, depuis 1971"
+  description="Depuis 1971 et 2007, les Transports Berberat et Thenot, unis en 2012. L’histoire d’un groupe familial de transport et de logistique."
+  path="/histoire"
+>
+  <PageHead
+    kicker="Histoire du groupe"
+    title="Plus de 60 ans de route"
+    lead={`De deux entreprises familiales de transport routier en Meuse et en Haute-Marne à un groupe de ${SITE.employees}${NBSP}collaborateurs.`}
+    image={archiveManSnow}
+    alt="Photo d’archive en noir et blanc : un camion Berberat sur une route bordée de champs enneigés."
+    crumbs={[{ label: 'Histoire' }]}
+  />
+
+  <section class="section" aria-labelledby="recit-titre">
+    <div class="container story">
+      <div class="story__head reveal">
+        <SectionHead id="recit-titre" kicker="Notre histoire" title="Deux familles, une même route" />
+      </div>
+      <div class="story__text reveal" data-reveal-delay="80">
+        <p class="story__first">{HISTORY_TEXT[0]}</p>
+        <div class="prose story__prose">
+          <p>{HISTORY_TEXT[1]}</p>
+          <p>{HISTORY_TEXT[2]}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section is-dark" aria-labelledby="dates-titre">
+    <div class="container">
+      <SectionHead id="dates-titre" kicker="Repères" title="Les grandes étapes" />
+      <Timeline steps={TIMELINE} />
+    </div>
+  </section>
+
+  <StatBand items={today} tone="grey" chip="Parking sécurisé" title="Aujourd’hui, en chiffres" />
+
+  <SplitSection
+    id="aujourdhui"
+    image={yardDrone}
+    alt="Vue aérienne d’une cour d’exploitation : une longue rangée de tracteurs noirs Thenot attelés à des semi-remorques bâchées, devant un entrepôt."
+    kicker="Aujourd’hui"
+    title="Un groupe qui se développe"
+    ratio="16 / 10"
+    position="62% center"
+  >
+    <p>
+      Le groupe poursuit son développement avec ses {SITE.employees}&nbsp;collaborateurs&nbsp;: un matériel roulant
+      renouvelé, une surface logistique portée à 20&nbsp;000&nbsp;m², 90&nbsp;moteurs et 7&nbsp;sites d’exploitation.
+    </p>
+    <p>Il conserve les valeurs familiales qui font sa force depuis ses débuts.</p>
+    <Button slot="actions" href="/moyens" variant="dark" icon="arrow">Nos moyens</Button>
+  </SplitSection>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .story {
+    display: grid;
+    gap: 8px;
+  }
+  @media (min-width: 900px) {
+    .story {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      gap: clamp(3rem, 1rem + 4vw, 6rem);
+      align-items: start;
+    }
+  }
+  .story__first {
+    padding-left: 20px;
+    border-left: 3px solid var(--red);
+    font-size: var(--fs-lead);
+    font-weight: var(--fw-medium);
+    line-height: 1.6;
+    color: var(--fg);
+    max-width: 60ch;
+  }
+  .story__prose {
+    margin-top: 28px;
+  }
+</style>

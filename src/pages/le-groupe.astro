@@ -1,0 +1,427 @@
+---
+// /le-groupe: the six companies of the group, one block each.
+// Rhythm: dark head > white intro > grey entities > dark values > white CTA.
+// Each entity block carries id = entity.slug (home cards and JSON-LD link here).
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import SectionHead from '../components/SectionHead.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { Image } from 'astro:assets';
+import { ENTITIES, HISTORY_TEXT, SITE, NBSP } from '../config';
+import warehouseAerial from '../images/photos/warehouse-aerial.jpg';
+
+// Page copy per entity: only facts from the client's PDF and the verified sites.
+const ROLE: Record<string, string> = {
+  'transports-berberat':
+    'Fondée en 1971 sous le nom de Transports Berberat Père et Fils, la société réalise du transport routier de marchandises depuis Val-d’Ornain, en Meuse. Elle est à l’origine du groupe.',
+  'transports-thenot':
+    'Depuis 2007, les Transports Thenot réalisent du transport routier de marchandises depuis Cousances-les-Forges, en Meuse.',
+  bte: 'Berberat Thenot Expertise assure le transport de proximité pour l’industrie, la grande distribution et les matériaux de construction, depuis Bettancourt-la-Ferrée, en Haute-Marne.',
+  btl: `Berberat Thenot Logistique porte la logistique et l’entreposage du groupe, avec 20${NBSP}000${NBSP}m² de stockage intérieur à Bettancourt-la-Ferrée et à Saint-Dizier, en Haute-Marne.`,
+  lgs: 'Logistique Gardiennage Services apporte les services associés du groupe&nbsp;: logistique, gardiennage et parking sécurisé pour poids lourds.',
+  eurocap:
+    'Eurocap Transports assure l’affrètement et l’organisation de transports, depuis Pompey, en Meurthe-et-Moselle.',
+};
+const TAGS: Record<string, string[]> = {
+  'transports-berberat': ['Transport routier', 'Depuis 1971'],
+  'transports-thenot': ['Transport routier', 'Depuis 2007'],
+  bte: ['Transport de proximité', 'Certifié ISO 9001'],
+  btl: ['Logistique', 'Entreposage'],
+  lgs: ['Gardiennage', 'Parking sécurisé'],
+  eurocap: ['Affrètement', 'Organisation de transports'],
+};
+
+const intro = [
+  { value: '2012', label: 'Association des Transports Berberat et des Transports Thenot' },
+  { value: String(SITE.employees), label: 'collaborateurs' },
+  { value: '6', label: 'sociétés' },
+  { value: '3', label: 'départements' },
+];
+
+const values = [
+  {
+    title: 'Proximité avec nos clients',
+    text: 'Des sites en Meuse, en Haute-Marne et en Meurthe-et-Moselle, au plus près des clients que le groupe accompagne au quotidien.',
+  },
+  {
+    title: 'Qualité de service',
+    text: 'Une exigence partagée par les six sociétés du groupe. Berberat Thenot Expertise est certifiée ISO&nbsp;9001.',
+  },
+  {
+    title: 'Savoir-faire reconnu',
+    text: 'Un métier de transport routier de marchandises exercé depuis 1971, élargi à la logistique et aux services associés.',
+  },
+  {
+    title: 'Valeurs familiales',
+    text: `Un groupe familial de ${SITE.employees}${NBSP}collaborateurs, qui conserve les valeurs familiales qui font sa force.`,
+  },
+];
+---
+
+<Base
+  title="Le groupe, six sociétés"
+  description={`Six sociétés, une offre globale${NBSP}: transport routier, logistique et services associés en Meuse, Haute-Marne et Meurthe-et-Moselle.`}
+  path="/le-groupe"
+>
+  <PageHead
+    kicker="Le groupe"
+    title="Six sociétés, une offre globale"
+    lead={`Un groupe familial qui réunit transport routier de marchandises, logistique et services associés, sur trois départements${NBSP}: Meuse, Haute-Marne et Meurthe-et-Moselle.`}
+    image={warehouseAerial}
+    alt="Vue aérienne de l’entrepôt Berberat Thenot Expertise, avec ses quais de chargement et son parking."
+    crumbs={[{ label: 'Le groupe' }]}
+  />
+
+  <section class="section" aria-labelledby="intro-titre">
+    <div class="container intro">
+      <div class="intro__head reveal">
+        <SectionHead id="intro-titre" kicker="Depuis 2012" title="Deux familles du transport, un seul groupe" />
+      </div>
+      <div class="intro__body reveal" data-reveal-delay="80">
+        <div class="prose intro__prose">
+          <p>{HISTORY_TEXT[1]}</p>
+          <p>{HISTORY_TEXT[2]}</p>
+        </div>
+        <dl class="intro__facts">
+          {
+            intro.map((f) => (
+              <div class="intro__fact">
+                <dt>{f.label}</dt>
+                <dd>{f.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="section is-grey" aria-labelledby="societes-titre">
+    <div class="container">
+      <SectionHead
+        id="societes-titre"
+        kicker="Les sociétés"
+        title="Qui fait quoi dans le groupe"
+        lead="Chaque société porte un métier. Ensemble, elles forment une offre globale de transport, de logistique et de services associés."
+      />
+      <nav class="jump" aria-label="Les six sociétés">
+        <ul role="list">
+          {
+            ENTITIES.map((e) => (
+              <li>
+                <a href={`#${e.slug}`}>{e.shortName}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <ol role="list" class="ents">
+        {
+          ENTITIES.map((e, i) => (
+            <li class="ent reveal" id={e.slug}>
+              <div class="ent__logo">
+                <Image
+                  src={e.logo}
+                  alt={e.logoAlt}
+                  width={Math.min(480, e.logo.width)}
+                  widths={[260, 480].filter((w) => w <= e.logo.width)}
+                  sizes="260px"
+                  format="webp"
+                  quality={90}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div class="ent__body">
+                <p class="ent__index" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
+                </p>
+                <h3 class="h3 ent__name">
+                  {e.name}
+                  {e.shortName.length <= 4 && <span class="ent__short"> ({e.shortName})</span>}
+                </h3>
+                <ul role="list" class="ent__tags">
+                  {TAGS[e.slug]!.map((t) => <li>{t}</li>)}
+                </ul>
+                <p class="ent__role" set:html={ROLE[e.slug]} />
+                <div class="ent__contact">
+                  {e.addresses.map((a) => (
+                    <address class="ent__addr">
+                      <Icon name="pin" size={20} />
+                      <span>
+                        {a.street}
+                        <br />
+                        {a.postalCode} {a.locality}
+                      </span>
+                    </address>
+                  ))}
+                  {e.phone && (
+                    <a class="ent__tel" href={e.phone.href}>
+                      <Icon name="phone" size={20} />
+                      {e.phone.display}
+                    </a>
+                  )}
+                </div>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section is-dark" aria-labelledby="valeurs-titre">
+    <div class="container">
+      <SectionHead id="valeurs-titre" kicker="Nos valeurs" title="Ce qui fait la force du groupe" />
+      <ul role="list" class="vals">
+        {
+          values.map((v, i) => (
+            <li class="val reveal" data-reveal-delay={String(i * 80)}>
+              <span class="val__index" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3 class="val__title">{v.title}</h3>
+              <p class="val__text" set:html={v.text} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  /* ---------- Intro ---------- */
+  .intro {
+    display: grid;
+    gap: 8px;
+  }
+  @media (min-width: 900px) {
+    .intro {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: clamp(3rem, 1rem + 4vw, 6rem);
+      align-items: start;
+    }
+  }
+  .intro__facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 24px;
+    margin-top: 40px;
+    border-top: 2px solid var(--rule-strong);
+  }
+  .intro__fact {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .intro__fact dd {
+    font-size: clamp(2rem, 1.4rem + 2vw, 3rem);
+    font-weight: var(--fw-black);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+  }
+  .intro__fact dt {
+    font-size: var(--fs-micro);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+    text-transform: uppercase;
+    color: var(--fg-2);
+  }
+
+  /* ---------- Jump links ---------- */
+  .jump {
+    margin-bottom: clamp(2rem, 1.5rem + 2vw, 3rem);
+  }
+  .jump ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .jump a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 16px;
+    border: 1.5px solid var(--rule-strong);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--fg);
+    transition:
+      background-color var(--dur) var(--ease-std),
+      color var(--dur) var(--ease-std);
+  }
+  @media (hover: hover) {
+    .jump a:hover {
+      background: var(--ink);
+      color: #fff;
+    }
+  }
+
+  /* ---------- Entity blocks ---------- */
+  .ents {
+    border-top: 2px solid var(--rule-strong);
+  }
+  .ent {
+    display: grid;
+    gap: 24px;
+    padding-block: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+    border-bottom: 1px solid var(--grey-200);
+  }
+  @media (min-width: 900px) {
+    .ent {
+      grid-template-columns: 340px minmax(0, 1fr);
+      gap: clamp(2.5rem, 1rem + 4vw, 5rem);
+      align-items: start;
+    }
+  }
+  .ent__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 168px;
+    padding: 28px 32px;
+    background: var(--paper);
+    border: 1px solid var(--grey-200);
+  }
+  .ent__logo :global(img) {
+    width: auto;
+    max-width: min(100%, 260px);
+    max-height: 104px;
+    object-fit: contain;
+  }
+  .ent__body {
+    display: grid;
+    gap: 14px;
+    max-width: 66ch;
+  }
+  .ent__index {
+    font-size: var(--fs-micro);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--track-caps);
+    color: var(--accent-text);
+  }
+  .ent__name {
+    text-wrap: balance;
+  }
+  .ent__short {
+    color: var(--grey-500);
+  }
+  .ent__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .ent__tags li {
+    padding: 4px 10px;
+    background: var(--paper);
+    border-left: 3px solid var(--red);
+    font-size: var(--fs-micro);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--grey-900);
+  }
+  .ent__role {
+    color: var(--fg-2);
+  }
+  .ent__contact {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 12px 40px;
+    padding-top: 16px;
+    border-top: 1px solid var(--grey-200);
+  }
+  .ent__addr {
+    display: flex;
+    gap: 10px;
+    font-style: normal;
+    font-size: var(--fs-small);
+    line-height: 1.55;
+    color: var(--fg-2);
+  }
+  .ent__addr :global(svg),
+  .ent__tel :global(svg) {
+    flex: none;
+    color: var(--red);
+  }
+  .ent__tel {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    font-size: 1.125rem;
+    font-weight: var(--fw-black);
+    color: var(--fg);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  @media (hover: hover) {
+    .ent__tel:hover {
+      text-decoration: underline;
+      text-decoration-color: var(--red);
+    }
+  }
+
+  /* ---------- Values ---------- */
+  .vals {
+    display: grid;
+    border-top: 1px solid var(--rule);
+  }
+  @media (min-width: 640px) {
+    .vals {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 32px;
+    }
+  }
+  @media (min-width: 1024px) {
+    .vals {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .val {
+    display: grid;
+    align-content: start;
+    gap: 14px;
+    padding-block: 28px;
+    border-bottom: 1px solid var(--rule);
+  }
+  @media (min-width: 1024px) {
+    .val {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+  }
+  .val__index {
+    font-size: clamp(2rem, 1.5rem + 1.6vw, 3rem);
+    font-weight: var(--fw-black);
+    line-height: 1;
+    color: var(--red);
+  }
+  .val__title {
+    font-size: 1.0625rem;
+    font-weight: var(--fw-black);
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+    text-transform: uppercase;
+    color: var(--fg);
+  }
+  .val__text {
+    font-size: var(--fs-small);
+    color: var(--fg-2);
+    max-width: 36ch;
+  }
+</style>

@@ -1,0 +1,191 @@
+---
+// /moyens: own resources. Fleet, storage, sites, secure parking.
+// Rhythm: dark head > dark figures (flush, like home) > white fleet >
+// grey storage split > white sites > dark parking split > white CTA.
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import SectionHead from '../components/SectionHead.astro';
+import StatBand from '../components/StatBand.astro';
+import SplitSection from '../components/SplitSection.astro';
+import DeptSchematic from '../components/DeptSchematic.astro';
+import SiteList from '../components/SiteList.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
+import { SITES, NBSP, type Stat } from '../config';
+import volvoFh from '../images/photos/volvo-fh.jpg';
+import warehouseAerial from '../images/photos/warehouse-aerial.jpg';
+import yardDrone from '../images/photos/yard-drone.jpg';
+
+const figures: Stat[] = [
+  { value: 90, label: 'moteurs' },
+  { value: 20000, suffix: `${NBSP}m²`, label: 'de stockage intérieur', group: true },
+  { value: 7, label: "sites d'exploitation" },
+  { value: 3, label: 'départements' },
+];
+
+const fleet = [
+  'Tracteurs routiers récents',
+  'Semi-remorques bâchées de type tautliner',
+  'Matériel entretenu et renouvelé',
+];
+---
+
+<Base
+  title={`Moyens${NBSP}: flotte, stockage, sites`}
+  description={`90 moteurs, 20${NBSP}000${NBSP}m² de stockage intérieur, 7 sites d’exploitation et un parking sécurisé pour poids lourds en Meuse et Haute-Marne.`}
+  path="/moyens"
+>
+  <PageHead
+    kicker="Moyens propres"
+    title={`90 moteurs, 20${NBSP}000${NBSP}m², 7 sites`}
+    lead="Un parc roulant, des surfaces logistiques et des sites d’exploitation en propre, au service du transport et de la logistique."
+    image={volvoFh}
+    alt="Tracteur routier noir attelé à une semi-remorque bâchée, vu de trois quarts avant sous un ciel bleu."
+    position="50% 60%"
+    crumbs={[{ label: 'Moyens' }]}
+  />
+
+  <StatBand items={figures} chip="Parking sécurisé" title="Nos moyens en chiffres" />
+
+  <section class="section" aria-labelledby="parc-titre">
+    <div class="container fleet">
+      <div class="reveal">
+        <SectionHead
+          id="parc-titre"
+          kicker="Parc roulant"
+          title="90 moteurs sur la route"
+          lead="Le groupe exploite son propre parc de tracteurs routiers et de semi-remorques, un matériel récent et entretenu."
+        />
+      </div>
+      <div class="fleet__panel reveal" data-reveal-delay="80">
+        <p class="fleet__big"><span>90</span> moteurs</p>
+        <ul role="list" class="fleet__list">
+          {
+            fleet.map((f) => (
+              <li>
+                <Icon name="check" size={18} strokeWidth={2} />
+                <span>{f}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <SplitSection
+    id="surfaces"
+    image={warehouseAerial}
+    alt="Vue aérienne de l’entrepôt Berberat Thenot Expertise, avec ses quais de chargement et son parking."
+    kicker="Surfaces logistiques"
+    title={`20${NBSP}000${NBSP}m² de stockage intérieur`}
+    tone="grey"
+    reverse
+    ratio="16 / 10"
+  >
+    <p>
+      Berberat Thenot Logistique dispose de 20&nbsp;000&nbsp;m² de stockage intérieur, sur les sites de
+      Bettancourt-la-Ferrée et de Saint-Dizier, en Haute-Marne.
+    </p>
+    <p>Les surfaces logistiques s’appuient directement sur les moyens de transport du groupe.</p>
+    <Button slot="actions" href="/logistique" variant="dark" icon="arrow">La logistique</Button>
+  </SplitSection>
+
+  <section class="section" aria-labelledby="sites-titre">
+    <div class="container">
+      <SectionHead
+        id="sites-titre"
+        kicker="Implantations"
+        title="7 sites sur trois départements"
+        lead="Le groupe est implanté en Meuse, en Haute-Marne et en Meurthe-et-Moselle."
+      />
+      <DeptSchematic />
+      <p class="sites-note">
+        Le groupe exploite 7&nbsp;sites au total. Ci-dessous, les adresses publiées des sites principaux.
+      </p>
+      <SiteList sites={SITES} columns={3} />
+    </div>
+  </section>
+
+  <SplitSection
+    id="parking"
+    image={yardDrone}
+    alt="Vue aérienne d’une cour d’exploitation : une longue rangée de tracteurs noirs Thenot attelés à des semi-remorques bâchées, devant un entrepôt."
+    kicker="Parking sécurisé"
+    title="Parking sécurisé et gardiennage"
+    tone="dark"
+    ratio="16 / 10"
+    position="62% center"
+  >
+    <p>
+      Avec Logistique Gardiennage Services, le groupe propose un parking sécurisé pour poids lourds et des prestations de
+      gardiennage, en complément du transport et de la logistique.
+    </p>
+    <Button slot="actions" href="/services" variant="outline" icon="arrow">Les services</Button>
+  </SplitSection>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .fleet {
+    display: grid;
+    gap: 8px;
+  }
+  @media (min-width: 900px) {
+    .fleet {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: clamp(3rem, 1rem + 4vw, 6rem);
+      align-items: start;
+    }
+  }
+  .fleet__panel {
+    padding: clamp(1.5rem, 1.2rem + 1.2vw, 2.5rem);
+    background: var(--panel);
+    border-top: 3px solid var(--red);
+  }
+  .fleet__big {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fg-2);
+  }
+  .fleet__big span {
+    font-size: var(--fs-stat);
+    font-weight: var(--fw-black);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+  }
+  .fleet__list {
+    display: grid;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    font-weight: var(--fw-bold);
+    color: var(--fg);
+  }
+  .fleet__list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .fleet__list :global(svg) {
+    flex: none;
+    margin-top: 0.2em;
+    color: var(--red);
+  }
+  .sites-note {
+    margin-block: 28px 20px;
+    padding-left: 14px;
+    border-left: 2px solid var(--red);
+    font-size: var(--fs-small);
+    color: var(--fg-muted);
+  }
+</style>
