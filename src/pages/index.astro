@@ -1,0 +1,264 @@
+---
+// HOME: the design reference for every other page.
+// Rhythm: dark hero > dark stats > white pillars > grey entities >
+// white split > grey history > white FLO > dark recruitment > white CTA > footer.
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import StatBand from '../components/StatBand.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Pillars from '../components/Pillars.astro';
+import EntityGrid from '../components/EntityGrid.astro';
+import SplitSection from '../components/SplitSection.astro';
+import FloBand from '../components/FloBand.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
+import { Picture } from 'astro:assets';
+import { KEY_FIGURES, SITE, NBSP } from '../config';
+import { HALF_WIDTHS, IMAGE_FORMATS, capWidths } from '../lib/images';
+
+import yardDrone from '../images/photos/yard-drone.jpg';
+import warehouseAerial from '../images/photos/warehouse-aerial.jpg';
+import archiveManSnow from '../images/photos/archive-man-snow.jpg';
+import floTrailer from '../images/photos/flo-trailer.jpg';
+import volvoFh from '../images/photos/volvo-fh.jpg';
+
+const pillars = [
+  {
+    icon: 'truck' as const,
+    title: 'Transport routier de marchandises',
+    text: 'Lots complets et partiels, en régional comme en national, avec l’appui du réseau Groupement FLO.',
+    items: ['Lots complets et partiels', 'Régional et national', 'Réseau Groupement FLO au niveau national'],
+    href: '/transport',
+    linkLabel: 'Le transport',
+  },
+  {
+    icon: 'warehouse' as const,
+    title: 'Logistique & entreposage',
+    text: `20${NBSP}000${NBSP}m² de stockage intérieur pour stocker, gérer et préparer vos marchandises.`,
+    items: [`20${NBSP}000${NBSP}m² de stockage intérieur`, 'Gestion de stock', 'Préparation'],
+    href: '/logistique',
+    linkLabel: 'La logistique',
+  },
+  {
+    icon: 'shield' as const,
+    title: 'Services associés',
+    text: 'Gardiennage, parking sécurisé pour poids lourds et affrètement, pour compléter l’offre transport et logistique.',
+    items: ['Gardiennage', 'Parking sécurisé poids lourds', 'Affrètement'],
+    href: '/services',
+    linkLabel: 'Les services',
+  },
+];
+
+const jobs = ['Conducteurs SPL', 'Exploitation', 'Logistique et entrepôt'];
+const reasons = ['Un groupe familial', 'Du matériel récent', 'La proximité au quotidien'];
+---
+
+<Base
+  title="Accueil"
+  description={`Groupe familial de transport routier de marchandises, logistique et services associés en Meuse, Haute-Marne et Meurthe-et-Moselle depuis 1971. Membre du Groupement FLO.`}
+  path="/"
+>
+  <Hero
+    image={yardDrone}
+    alt="Vue aérienne d’une cour d’exploitation : une longue rangée de tracteurs noirs Thenot attelés à des semi-remorques bâchées, devant un entrepôt."
+    kicker="Groupe Berberat Thenot · Meuse, Haute-Marne, Meurthe-et-Moselle"
+    title="Partenaire transport & logistique depuis 1971"
+    lead={`Transport routier de marchandises, logistique et services associés. Un groupe familial de ${SITE.employees} collaborateurs, membre du Groupement FLO.`}
+    primary={{ label: 'Demander un devis', href: '/contact#devis' }}
+    secondary={{ label: 'Découvrir le groupe', href: '/le-groupe' }}
+    badge="Groupement FLO"
+    position="62% center"
+  />
+
+  <StatBand items={KEY_FIGURES} chip="Parking sécurisé" />
+
+  <section class="section" aria-labelledby="metiers-titre">
+    <div class="container">
+      <SectionHead
+        id="metiers-titre"
+        kicker="Nos métiers"
+        title="Transport, logistique et services associés"
+        lead="Une offre globale portée par six sociétés, pour transporter, stocker et sécuriser vos marchandises."
+      />
+      <Pillars items={pillars} />
+    </div>
+  </section>
+
+  <section class="section is-grey" aria-labelledby="groupe-titre">
+    <div class="container">
+      <SectionHead id="groupe-titre" kicker="Le groupe" title="Six sociétés, une offre globale">
+        <a slot="action" class="link-arrow" href="/le-groupe">
+          Découvrir le groupe
+          <Icon name="arrow" />
+        </a>
+      </SectionHead>
+      <EntityGrid />
+    </div>
+  </section>
+
+  <SplitSection
+    id="logistique"
+    image={warehouseAerial}
+    alt="Vue aérienne d’un entrepôt du groupe portant l’enseigne Berberat Thenot Expertise, avec ses quais de chargement et son parking."
+    kicker="Logistique & entreposage"
+    title={`20${NBSP}000${NBSP}m² de stockage intérieur`}
+    ratio="16 / 10"
+  >
+    <p>
+      Avec Berberat Thenot Logistique, le groupe met à votre disposition 20&nbsp;000&nbsp;m² de stockage intérieur
+      sur ses sites de Bettancourt-la-Ferrée et de Saint-Dizier, en Haute-Marne.
+    </p>
+    <p>Stockage, gestion de stock et préparation : la logistique s’appuie directement sur les moyens de transport du groupe.</p>
+    <Button slot="actions" href="/logistique" variant="dark" icon="arrow">La logistique</Button>
+  </SplitSection>
+
+  <SplitSection
+    id="histoire"
+    image={archiveManSnow}
+    alt="Photo d’archive en noir et blanc : un camion Berberat sur une route bordée de champs enneigés."
+    kicker="Histoire"
+    title="Depuis 1971"
+    tone="grey"
+    reverse
+    ratio="3 / 2"
+  >
+    <p>
+      Depuis 1971 et 2007, en Meuse et Haute-Marne, les Transports Berberat et les Transports Thenot développent une
+      activité de transport routier de marchandises en s’appuyant sur la proximité avec leurs clients, la qualité de
+      service et un savoir-faire reconnu.
+    </p>
+    <p>
+      En 2012, les deux entreprises unissent leurs forces. Aujourd’hui, le groupe poursuit son développement avec ses
+      110&nbsp;collaborateurs, tout en conservant ses valeurs familiales.
+    </p>
+    <Button slot="actions" href="/histoire" variant="link">Notre histoire</Button>
+  </SplitSection>
+
+  <FloBand
+    tone="light"
+    image={floTrailer}
+    alt="Semi-remorque bâchée aux couleurs du Groupement FLO, sous un ciel bleu."
+  />
+
+  <section class="section is-dark recruit" aria-labelledby="recrutement-titre">
+    <div class="container recruit__grid">
+      <div class="recruit__text reveal">
+        <p class="kicker">Recrutement</p>
+        <h2 id="recrutement-titre" class="h2 recruit__title">Rejoindre le groupe</h2>
+        <p class="lead recruit__lead">
+          Conducteurs, exploitation, logistique&nbsp;: rejoignez un groupe familial de 110&nbsp;collaborateurs, ancré en
+          Meuse, Haute-Marne et Meurthe-et-Moselle.
+        </p>
+        <div class="recruit__cols">
+          <div>
+            <h3 class="recruit__h3">Nos métiers</h3>
+            <ul role="list" class="recruit__list">
+              {jobs.map((j) => <li><Icon name="chevron" size={18} />{j}</li>)}
+            </ul>
+          </div>
+          <div>
+            <h3 class="recruit__h3">Pourquoi nous rejoindre</h3>
+            <ul role="list" class="recruit__list">
+              {reasons.map((r) => <li><Icon name="check" size={18} />{r}</li>)}
+            </ul>
+          </div>
+        </div>
+        <div class="recruit__actions">
+          <Button href="/recrutement" variant="primary" size="lg" icon="arrow">Voir le recrutement</Button>
+        </div>
+      </div>
+      <figure class="recruit__media reveal" data-reveal-delay="80" style={`max-width: ${volvoFh.width}px`}>
+        <Picture
+          src={volvoFh}
+          alt="Tracteur routier noir attelé à une semi-remorque bâchée, vu de trois quarts avant sous un ciel bleu."
+          formats={IMAGE_FORMATS}
+          widths={capWidths(volvoFh, HALF_WIDTHS)}
+          sizes="(min-width: 900px) 40vw, 100vw"
+          loading="lazy"
+          decoding="async"
+          style="object-position: 50% 60%"
+        />
+      </figure>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .recruit__grid {
+    display: grid;
+    gap: clamp(2.5rem, 2rem + 2vw, 4rem);
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .recruit__grid {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+      gap: clamp(3rem, 1rem + 4vw, 6rem);
+    }
+  }
+  .recruit__title {
+    margin-top: 16px;
+  }
+  .recruit__lead {
+    margin-top: 20px;
+    max-width: 50ch;
+  }
+  .recruit__cols {
+    display: grid;
+    gap: 28px;
+    margin-top: 36px;
+    padding-top: 28px;
+    border-top: 1px solid var(--rule);
+  }
+  @media (min-width: 560px) {
+    .recruit__cols {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .recruit__h3 {
+    margin-bottom: 14px;
+    font-size: var(--fs-micro);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--track-caps);
+    text-transform: uppercase;
+    color: var(--fg-muted);
+  }
+  .recruit__list {
+    display: grid;
+    gap: 12px;
+    font-weight: var(--fw-bold);
+    color: #fff;
+  }
+  .recruit__list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .recruit__list :global(svg) {
+    flex: none;
+    color: var(--red);
+  }
+  .recruit__actions {
+    margin-top: 40px;
+  }
+  .recruit__media {
+    width: 100%;
+    margin: 0;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--ink-2);
+  }
+  @media (max-width: 899px) {
+    .recruit__media {
+      aspect-ratio: 4 / 3;
+    }
+  }
+  .recruit__media :global(picture),
+  .recruit__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>

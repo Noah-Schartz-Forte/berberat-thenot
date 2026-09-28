@@ -1,0 +1,59 @@
+---
+import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
+import { MAIN_SITES } from '../config';
+---
+
+<Base
+  title="Page introuvable"
+  description="La page demandée n’existe pas ou a été déplacée. Retrouvez le Groupe Berberat Thenot, transport et logistique depuis 1971."
+  path="/404"
+  noindex
+>
+  <section class="section is-dark nf" aria-labelledby="nf-titre">
+    <div class="container">
+      <p class="kicker">Erreur 404</p>
+      <h1 id="nf-titre" class="h1 nf__title">Page introuvable</h1>
+      <span class="rule-red nf__rule" aria-hidden="true"></span>
+      <p class="lead nf__lead">
+        La page que vous cherchez n’existe pas ou a été déplacée. Revenez à l’accueil ou appelez-nous directement au
+        <a href={MAIN_SITES[0]!.phone!.href}>{MAIN_SITES[0]!.phone!.display}</a>.
+      </p>
+      <div class="nf__actions">
+        <Button href="/" variant="primary" size="lg" icon="arrow">Retour à l’accueil</Button>
+        <Button href="/contact" variant="outline" size="lg">Nous contacter</Button>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+  }
+  .nf__title {
+    margin-top: 18px;
+  }
+  .nf__rule {
+    margin-top: 24px;
+    width: 72px;
+    height: 4px;
+  }
+  .nf__lead {
+    margin-top: 24px;
+    max-width: 52ch;
+  }
+  .nf__lead a {
+    color: #fff;
+    font-weight: var(--fw-bold);
+    white-space: nowrap;
+  }
+  .nf__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    margin-top: 36px;
+  }
+</style>
