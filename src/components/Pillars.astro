@@ -1,0 +1,44 @@
+---
+// Three offer blocks (the group's three métiers) in a strong grid.
+//
+//   <Pillars items={[
+//     { icon: 'truck', title: 'Transport routier de marchandises', text: '...',
+//       items: ['...'], href: '/transport', linkLabel: 'Le transport' },
+//     ...
+//   ]} />
+//
+// Props: items (Card props[]), numbered? (default true: 01, 02, 03).
+// Wrap it in your own <section> + <SectionHead>.
+import Card from './Card.astro';
+import type { Props as CardProps } from './Card.astro';
+
+export interface Props {
+  items: CardProps[];
+  numbered?: boolean;
+}
+
+const { items, numbered = true } = Astro.props;
+---
+
+<ul role="list" class="pillars">
+  {
+    items.map((item, i) => (
+      <li class="reveal" data-reveal-delay={String(i * 80)}>
+        <Card {...item} index={numbered ? String(i + 1).padStart(2, '0') : item.index} />
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .pillars {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 900px) {
+    .pillars {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+  }
+</style>

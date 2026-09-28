@@ -1,0 +1,195 @@
+---
+// Full-bleed photo hero (home page, or a flagship landing page).
+// Legibility comes from a NEUTRAL black gradient (0.35 to 0.7 alpha),
+// never a brand tint and never text-shadow.
+//
+//   <Hero
+//     image={yardDrone}
+//     alt="..."
+//     kicker="Groupe Berberat Thenot · Meuse, Haute-Marne, Meurthe-et-Moselle"
+//     title="Partenaire transport & logistique depuis 1971"
+//     lead="..."
+//     primary={{ label: 'Demander un devis', href: '/contact#devis' }}
+//     secondary={{ label: 'Découvrir le groupe', href: '/le-groupe' }}
+//     badge="Groupement FLO"
+//   />
+//
+// The photo is the LCP element: eager, fetchpriority high, AVIF/WebP.
+// `position` sets object-position (default "center") to keep the subject.
+import type { ImageMetadata } from 'astro';
+import { Picture } from 'astro:assets';
+import Button from './Button.astro';
+import { HERO_WIDTHS, HERO_SIZES, IMAGE_FORMATS } from '../lib/images';
+
+interface Cta {
+  label: string;
+  href: string;
+}
+
+export interface Props {
+  image: ImageMetadata;
+  alt: string;
+  kicker?: string;
+  title: string;
+  lead?: string;
+  primary?: Cta;
+  secondary?: Cta;
+  badge?: string;
+  badgeHref?: string;
+  position?: string;
+}
+
+const { image, alt, kicker, title, lead, primary, secondary, badge, badgeHref = '/groupement-flo', position = 'center' } =
+  Astro.props;
+const widths = HERO_WIDTHS.filter((w) => w <= image.width);
+---
+
+<section class="hero is-dark" aria-labelledby="hero-title">
+  <div class="hero__media">
+    <Picture
+      src={image}
+      alt={alt}
+      formats={IMAGE_FORMATS}
+      widths={widths}
+      sizes={HERO_SIZES}
+      loading="eager"
+      decoding="async"
+      fetchpriority="high"
+      quality={72}
+      style={`object-position: ${position}`}
+    />
+  </div>
+  <div class="hero__scrim" aria-hidden="true"></div>
+
+  <div class="hero__inner container container--wide">
+    <div class="hero__content">
+      {
+        badge && (
+          <a class="hero__badge" href={badgeHref}>
+            <span class="hero__badge-mark" aria-hidden="true" />
+            {badge}
+          </a>
+        )
+      }
+      {kicker && <p class="kicker hero__kicker">{kicker}</p>}
+      <h1 id="hero-title" class="display hero__title">{title}</h1>
+      <span class="rule-red hero__rule" aria-hidden="true"></span>
+      {lead && <p class="lead hero__lead">{lead}</p>}
+      {
+        (primary || secondary) && (
+          <div class="hero__ctas">
+            {primary && (
+              <Button href={primary.href} variant="primary" size="lg" icon="arrow">
+                {primary.label}
+              </Button>
+            )}
+            {secondary && (
+              <Button href={secondary.href} variant="outline" size="lg">
+                {secondary.label}
+              </Button>
+            )}
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: clamp(600px, calc(100svh - var(--nav-h)), 920px);
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--ink);
+  }
+  .hero__media,
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+  .hero__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* Neutral black only. Phone: darker at the bottom where the text sits. */
+  .hero__scrim {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.45) 40%, rgba(0, 0, 0, 0.7) 100%);
+  }
+  @media (min-width: 900px) {
+    .hero__scrim {
+      background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.55) 38%, rgba(0, 0, 0, 0.35) 70%),
+        linear-gradient(0deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0) 40%);
+    }
+  }
+
+  .hero__inner {
+    padding-block: clamp(3rem, 2rem + 6vw, 7rem) clamp(2.5rem, 1.5rem + 4vw, 5.5rem);
+  }
+  .hero__content {
+    max-width: 860px;
+  }
+  .hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    margin-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    padding: 0 16px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: var(--radius-1);
+    background: rgba(0, 0, 0, 0.35);
+    color: #fff;
+    font-size: var(--fs-micro);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--track-caps);
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: border-color var(--dur) var(--ease-std);
+  }
+  @media (hover: hover) {
+    .hero__badge:hover {
+      border-color: #fff;
+    }
+  }
+  .hero__badge-mark {
+    width: 8px;
+    height: 8px;
+    background: var(--red);
+  }
+  .hero__kicker {
+    color: #fff;
+    margin-bottom: 20px;
+  }
+  .hero__title {
+    color: #fff;
+    max-width: 16ch;
+    text-wrap: balance;
+  }
+  .hero__rule {
+    margin-top: clamp(1.25rem, 1rem + 1vw, 2rem);
+    width: 88px;
+    height: 4px;
+  }
+  .hero__lead {
+    margin-top: clamp(1.25rem, 1rem + 1vw, 2rem);
+    max-width: 52ch;
+    color: rgba(255, 255, 255, 0.9);
+  }
+  .hero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    margin-top: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
+  }
+  @media (max-width: 479px) {
+    .hero__ctas :global(.btn) {
+      width: 100%;
+    }
+  }
+</style>

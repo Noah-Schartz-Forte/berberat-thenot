@@ -1,0 +1,118 @@
+---
+// History timeline: horizontal from 900px, vertical on phones.
+//
+//   <Timeline />                     (TIMELINE from config.ts)
+//   <Timeline steps={[{ year: '1971', title: '...', text: '...' }]} />
+//
+// Props: steps? (TimelineStep[]), headingLevel? (3). Colours follow the
+// surrounding section (.is-dark / .is-grey / light).
+import { TIMELINE, type TimelineStep } from '../config';
+
+export interface Props {
+  steps?: TimelineStep[];
+  headingLevel?: 3 | 4;
+}
+
+const { steps = TIMELINE, headingLevel = 3 } = Astro.props;
+const H = headingLevel === 4 ? 'h4' : 'h3';
+---
+
+<ol role="list" class="timeline" style={`--steps: ${steps.length}`}>
+  {
+    steps.map((s, i) => (
+      <li class="timeline__step reveal" data-reveal-delay={String(i * 90)}>
+        <span class="timeline__node" aria-hidden="true" />
+        <p class:list={['timeline__year', !/^\d+$/.test(s.year) && 'timeline__year--word']}>{s.year}</p>
+        <H class="timeline__title">{s.title}</H>
+        {s.text && <p class="timeline__text">{s.text}</p>}
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .timeline {
+    position: relative;
+    display: grid;
+    gap: 0;
+    padding-left: 32px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    left: 7px;
+    width: 2px;
+    background: var(--rule);
+  }
+  .timeline__step {
+    position: relative;
+    padding-bottom: 36px;
+  }
+  .timeline__step:last-child {
+    padding-bottom: 0;
+  }
+  .timeline__node {
+    position: absolute;
+    top: 8px;
+    left: -32px;
+    width: 16px;
+    height: 16px;
+    background: var(--bg, #fff);
+    border: 3px solid var(--red);
+  }
+  .timeline__step:last-child .timeline__node {
+    background: var(--red);
+  }
+  .timeline__year {
+    font-size: clamp(2rem, 1.5rem + 2vw, 3.25rem);
+    font-weight: var(--fw-black);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+  }
+  .timeline__year--word {
+    font-size: clamp(1.5rem, 1.2rem + 1.1vw, 2.25rem);
+    padding-block: 0.2em;
+  }
+  .timeline__title {
+    margin-top: 14px;
+    font-size: 1rem;
+    font-weight: var(--fw-black);
+    line-height: 1.35;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--fg);
+  }
+  .timeline__text {
+    margin-top: 8px;
+    font-size: var(--fs-small);
+    color: var(--fg-2);
+    max-width: 34ch;
+  }
+
+  @media (min-width: 900px) {
+    .timeline {
+      grid-template-columns: repeat(var(--steps, 4), minmax(0, 1fr));
+      gap: 32px;
+      padding-left: 0;
+      padding-top: 40px;
+    }
+    .timeline::before {
+      top: 7px;
+      bottom: auto;
+      left: 0;
+      right: 0;
+      width: auto;
+      height: 2px;
+    }
+    .timeline__node {
+      top: -40px;
+      left: 0;
+    }
+    .timeline__step {
+      padding-bottom: 0;
+    }
+  }
+</style>

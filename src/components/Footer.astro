@@ -1,0 +1,209 @@
+---
+// Site footer, dark, on every page (rendered by Base.astro).
+// Four columns: identity / Métiers / Le groupe / Contact (three main sites).
+// Bottom line: copyright, legal links, and the SchartzForte signature
+// (HARD RULE: exact wording, on every page).
+import Wordmark from './Wordmark.astro';
+import Icon from './Icon.astro';
+import { FOOTER_METIERS, FOOTER_GROUPE, LEGAL_LINKS, MAIN_SITES } from '../config';
+---
+
+<footer class="footer is-dark">
+  <div class="container footer__grid">
+    <div class="footer__brand">
+      <Wordmark href="/" size="lg" />
+      <p class="footer__desc">
+        Groupe familial de transport routier de marchandises, logistique et services associés, en Meuse,
+        Haute-Marne et Meurthe-et-Moselle depuis 1971.
+      </p>
+      <p class="footer__flo">
+        <span class="footer__flo-mark" aria-hidden="true"></span>
+        Membre du <a href="/groupement-flo">Groupement FLO</a>
+      </p>
+    </div>
+
+    <nav class="footer__col" aria-labelledby="footer-metiers">
+      <h2 class="footer__title" id="footer-metiers">Métiers</h2>
+      <ul role="list">
+        {FOOTER_METIERS.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <nav class="footer__col" aria-labelledby="footer-groupe">
+      <h2 class="footer__title" id="footer-groupe">Le groupe</h2>
+      <ul role="list">
+        {FOOTER_GROUPE.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="footer__col footer__contact">
+      <h2 class="footer__title">Contact</h2>
+      <ul role="list">
+        {
+          MAIN_SITES.map((s) => (
+            <li>
+              <p class="footer__site">{s.name}</p>
+              <p class="footer__addr">
+                {s.address.postalCode} {s.address.locality}
+              </p>
+              {s.phone && (
+                <a class="footer__tel" href={s.phone.href}>
+                  <Icon name="phone" size={16} />
+                  {s.phone.display}
+                </a>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+
+  <div class="container footer__bottom">
+    <p>© 2026 Groupe Berberat Thenot</p>
+    <ul role="list" class="footer__legal">
+      {LEGAL_LINKS.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+    </ul>
+    <p class="footer__sign">
+      Conçu et propulsé par <a href="https://schartzforte.lu" target="_blank" rel="noopener">Noah Schartz Forte</a>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--black);
+    color: var(--fg-2);
+    font-size: var(--fs-small);
+    border-top: 3px solid var(--red);
+  }
+  .footer__grid {
+    display: grid;
+    gap: 40px;
+    padding-block: clamp(3.5rem, 2.5rem + 4vw, 6rem) clamp(2.5rem, 2rem + 2vw, 4rem);
+  }
+  @media (min-width: 640px) {
+    .footer__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .footer__brand {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (min-width: 1024px) {
+    .footer__grid {
+      grid-template-columns: 1.6fr 1fr 1fr 1.3fr;
+      gap: 48px;
+    }
+    .footer__brand {
+      grid-column: auto;
+    }
+  }
+  .footer__desc {
+    max-width: 38ch;
+    margin-top: 24px;
+    line-height: 1.7;
+  }
+  .footer__flo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    color: #fff;
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: var(--fs-micro);
+  }
+  .footer__flo a {
+    color: #fff;
+  }
+  .footer__flo-mark {
+    width: 8px;
+    height: 8px;
+    background: var(--red);
+  }
+  .footer__title {
+    margin-bottom: 16px;
+    color: #fff;
+    font-size: var(--fs-micro);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--track-caps);
+    text-transform: uppercase;
+  }
+  .footer__col ul {
+    display: grid;
+    gap: 2px;
+  }
+  .footer__col a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    color: var(--fg-2);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease-std);
+  }
+  @media (hover: hover) {
+    .footer__col a:hover {
+      color: #fff;
+      text-decoration: underline;
+      text-decoration-color: var(--red);
+    }
+  }
+  .footer__contact ul {
+    gap: 18px;
+  }
+  .footer__site {
+    color: #fff;
+    font-weight: var(--fw-bold);
+  }
+  .footer__addr {
+    color: var(--fg-muted);
+  }
+  .footer__contact .footer__tel {
+    gap: 8px;
+    min-height: 44px;
+    color: #fff;
+    font-weight: var(--fw-medium);
+    white-space: nowrap;
+  }
+  .footer__tel :global(svg) {
+    color: var(--red);
+  }
+
+  .footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 28px;
+    padding-block: 20px 28px;
+    border-top: 1px solid var(--rule);
+    color: var(--fg-muted);
+    font-size: var(--fs-micro);
+  }
+  .footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 24px;
+  }
+  .footer__bottom a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--fg-muted);
+  }
+  @media (hover: hover) {
+    .footer__bottom a:hover {
+      color: #fff;
+    }
+  }
+  .footer__sign {
+    margin-left: auto;
+  }
+  @media (max-width: 767px) {
+    .footer__sign {
+      margin-left: 0;
+      flex-basis: 100%;
+    }
+  }
+</style>

@@ -1,0 +1,73 @@
+---
+// Base layout: every page renders through this.
+//
+//   <Base title="Logistique" description="..." path="/logistique">
+//     ...sections...
+//   </Base>
+//
+// Props
+//   title        page title; rendered as "Title | Groupe Berberat Thenot"
+//                (the home page gets "Groupe Berberat Thenot | tagline")
+//   description  meta description, French, 140 to 160 characters
+//   path         path for the canonical URL, e.g. "/logistique"
+//                (defaults to the current URL path)
+//   ogImage      optional, root-relative or absolute; defaults to /og.jpg
+//   jsonLd       optional extra JSON-LD nodes (BreadcrumbList, JobPosting...),
+//                merged into the default @graph (Organization + WebSite + WebPage)
+//   noindex      optional, adds robots noindex (404, legal pages if wanted)
+import Analytics from '@vercel/analytics/astro';
+import Seo from '../components/Seo.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/tokens.css';
+
+export interface Props {
+  title: string;
+  description: string;
+  path?: string;
+  ogImage?: string;
+  jsonLd?: Record<string, unknown>[];
+  noindex?: boolean;
+}
+
+const { title, description, path = Astro.url.pathname, ogImage, jsonLd, noindex } = Astro.props;
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    {/* Set .js before first paint: reveal styles only hide content when JS runs. */}
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#141414" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <link rel="preload" href="/fonts/montserrat-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/montserrat-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+
+    <Seo title={title} description={description} path={path} ogImage={ogImage} jsonLd={jsonLd} noindex={noindex} />
+
+    <slot name="head" />
+
+    {/* Vercel Web Analytics: cookieless, no personal data, no consent banner needed. */}
+    <Analytics />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
+    <Nav />
+    <main id="contenu">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      import '../scripts/app.client';
+    </script>
+  </body>
+</html>

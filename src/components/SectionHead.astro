@@ -1,0 +1,67 @@
+---
+// Section heading: kicker + H2 (+ optional lead) (+ optional action slot).
+//
+//   <SectionHead kicker="Le groupe" title="Six sociétés, une offre globale"
+//                lead="..." />
+//   <SectionHead kicker="Métiers" title="..." align="center" />
+//   <SectionHead kicker="..." title="...">
+//     <a slot="action" class="link-arrow" href="/le-groupe">Voir le groupe ...</a>
+//   </SectionHead>
+//
+// Props: kicker?, title, lead?, align? ('left' | 'center'), level? (2 | 3,
+// default 2), id? (heading id, for aria-labelledby on the section).
+export interface Props {
+  kicker?: string;
+  title: string;
+  lead?: string;
+  align?: 'left' | 'center';
+  level?: 2 | 3;
+  id?: string;
+  class?: string;
+}
+
+const { kicker, title, lead, align = 'left', level = 2, id, class: className } = Astro.props;
+const Tag = level === 3 ? 'h3' : 'h2';
+---
+
+<header class:list={['shead', `shead--${align}`, Astro.slots.has('action') && 'shead--action', className]}>
+  <div class="shead__text">
+    {kicker && <p class="kicker shead__kicker">{kicker}</p>}
+    <Tag id={id} class:list={[level === 3 ? 'h3' : 'h2', 'shead__title']}>{title}</Tag>
+    {lead && <p class="lead shead__lead">{lead}</p>}
+  </div>
+  {Astro.slots.has('action') && <div class="shead__action"><slot name="action" /></div>}
+</header>
+
+<style>
+  .shead {
+    display: grid;
+    gap: 20px;
+    margin-bottom: clamp(2.25rem, 1.6rem + 2.4vw, 4rem);
+  }
+  .shead__kicker {
+    margin-bottom: 16px;
+  }
+  .shead__title {
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+  .shead__lead {
+    margin-top: 20px;
+    max-width: 60ch;
+  }
+  .shead--center {
+    text-align: center;
+    justify-items: center;
+  }
+  .shead--center .shead__title,
+  .shead--center .shead__lead {
+    margin-inline: auto;
+  }
+  @media (min-width: 900px) {
+    .shead--action {
+      grid-template-columns: 1fr auto;
+      align-items: end;
+    }
+  }
+</style>

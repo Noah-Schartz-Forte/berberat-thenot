@@ -1,0 +1,324 @@
+---
+// Site header: one solid dark bar, sticky.
+//   >= 1280px: wordmark, all nine links, "Demander un devis" CTA.
+//   <  1280px: wordmark, CTA (from 560px), burger that opens a solid,
+//              full-height dark panel with big links (menu.client.ts).
+// Without JS the burger is hidden and the links wrap under the bar.
+// aria-current is rendered server-side from the current path.
+import Wordmark from './Wordmark.astro';
+import Icon from './Icon.astro';
+import { NAV, NAV_CTA, MAIN_SITES } from '../config';
+
+const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`);
+const firstPhone = MAIN_SITES[0]!.phone!;
+---
+
+<header class="nav is-dark" data-nav>
+  <div class="nav__bar container container--wide">
+    <Wordmark />
+
+    <nav class="nav__links" aria-label="Navigation principale">
+      <ul role="list">
+        {
+          NAV.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="nav__actions">
+      <a class="nav__cta" href={NAV_CTA.href}>{NAV_CTA.label}</a>
+      <button
+        class="nav__toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="menu-mobile"
+        data-menu-toggle
+      >
+        <span class="nav__toggle-open"><Icon name="menu" size={26} /></span>
+        <span class="nav__toggle-close"><Icon name="close" size={26} /></span>
+        <span class="nav__toggle-label">Menu</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="nav__panel" id="menu-mobile" data-menu-panel aria-label="Menu" role="dialog" aria-modal="true">
+    <div class="nav__panel-inner container">
+      <ul role="list" class="nav__panel-links">
+        {
+          NAV.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                {item.label}
+                <Icon name="chevron" size={22} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="nav__panel-foot">
+        <a class="nav__panel-cta" href={NAV_CTA.href}>
+          {NAV_CTA.label}
+          <Icon name="arrow" size={20} />
+        </a>
+        <a class="nav__panel-phone" href={firstPhone.href}>
+          <Icon name="phone" size={20} />
+          <span>{firstPhone.display}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-nav);
+    background: var(--ink);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .nav__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    height: var(--nav-h);
+  }
+
+  /* ---------- Desktop links ---------- */
+  .nav__links {
+    display: none;
+  }
+  .nav__links ul {
+    display: flex;
+    align-items: center;
+    gap: clamp(14px, 1.3vw, 24px);
+  }
+  .nav__links a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 0.75rem;
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    color: var(--grey-300);
+    transition: color var(--dur) var(--ease-std);
+  }
+  .nav__links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 6px;
+    height: 2px;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .nav__links a[aria-current='page'] {
+    color: #fff;
+  }
+  .nav__links a[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+  @media (hover: hover) {
+    .nav__links a:hover {
+      color: #fff;
+    }
+    .nav__links a:hover::after {
+      transform: scaleX(1);
+    }
+  }
+
+  /* ---------- Actions ---------- */
+  .nav__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav__cta {
+    display: none;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 18px;
+    background: var(--red);
+    border-radius: var(--radius-1);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      background-color var(--dur) var(--ease-std),
+      transform var(--dur-fast) var(--ease-out);
+  }
+  .nav__cta:active {
+    transform: scale(0.98);
+  }
+  @media (hover: hover) {
+    .nav__cta:hover {
+      background: var(--red-hover);
+    }
+  }
+  @media (min-width: 560px) {
+    .nav__cta {
+      display: inline-flex;
+    }
+  }
+
+  .nav__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 48px;
+    min-height: 48px;
+    margin-right: -8px;
+    padding: 0 8px;
+    color: #fff;
+  }
+  .nav__toggle-label {
+    font-size: 0.75rem;
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .nav__toggle-close,
+  .nav__toggle[aria-expanded='true'] .nav__toggle-open {
+    display: none;
+  }
+  .nav__toggle[aria-expanded='true'] .nav__toggle-close {
+    display: inline-flex;
+  }
+
+  /* ---------- Mobile panel: solid dark, full height ---------- */
+  .nav__panel {
+    position: fixed;
+    inset: var(--nav-h) 0 0 0;
+    z-index: var(--z-menu);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--ink);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition:
+      opacity var(--dur) var(--ease-out),
+      transform var(--dur) var(--ease-out),
+      visibility 0s linear var(--dur);
+  }
+  .nav__panel.is-open {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--dur) var(--ease-out),
+      transform var(--dur) var(--ease-out),
+      visibility 0s;
+  }
+  .nav__panel-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    min-height: 100%;
+    padding-block: 16px 32px;
+  }
+  .nav__panel-links a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 56px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: clamp(1.25rem, 1rem + 1.2vw, 1.75rem);
+    font-weight: var(--fw-black);
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #fff;
+  }
+  .nav__panel-links a :global(svg) {
+    color: var(--grey-400);
+  }
+  .nav__panel-links a[aria-current='page'] {
+    box-shadow: inset 4px 0 0 var(--red);
+    padding-left: 16px;
+  }
+  .nav__panel-foot {
+    display: grid;
+    gap: 12px;
+    margin-top: auto;
+  }
+  .nav__panel-cta,
+  .nav__panel-phone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 56px;
+    font-size: 0.875rem;
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: var(--radius-1);
+  }
+  .nav__panel-cta {
+    background: var(--red);
+    color: #fff;
+  }
+  .nav__panel-phone {
+    border: 1.5px solid rgba(255, 255, 255, 0.4);
+    color: #fff;
+  }
+
+  /* ---------- Desktop ---------- */
+  @media (min-width: 1280px) {
+    .nav__links {
+      display: block;
+    }
+    .nav__toggle,
+    .nav__panel {
+      display: none;
+    }
+  }
+
+  /* ---------- No JS: links wrap under the bar, no burger ---------- */
+  :global(html:not(.js)) .nav__toggle,
+  :global(html:not(.js)) .nav__panel {
+    display: none;
+  }
+  @media (max-width: 1279.98px) {
+    :global(html:not(.js)) .nav__links {
+      display: block;
+      order: 3;
+      flex-basis: 100%;
+      padding-bottom: 8px;
+    }
+    :global(html:not(.js)) .nav__links ul {
+      flex-wrap: wrap;
+      column-gap: 18px;
+      row-gap: 0;
+    }
+    :global(html:not(.js)) .nav__bar {
+      flex-wrap: wrap;
+      height: auto;
+      min-height: var(--nav-h);
+      row-gap: 0;
+    }
+  }
+</style>

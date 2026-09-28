@@ -1,0 +1,77 @@
+---
+// Per-page meta + JSON-LD. Rendered by Base.astro only.
+//
+// JSON-LD: one @graph with the group Organization (six subOrganizations,
+// from config.ts) + WebSite + WebPage, plus any page-specific nodes passed
+// through Base's `jsonLd` prop. No e-mail anywhere, by rule.
+import { SITE, organizationJsonLd } from '../config';
+
+export interface Props {
+  title: string;
+  description: string;
+  /** Path with leading slash, e.g. "/logistique". */
+  path: string;
+  ogImage?: string;
+  jsonLd?: Record<string, unknown>[];
+  noindex?: boolean;
+}
+
+const { title, description, path, ogImage = SITE.ogImage, jsonLd = [], noindex = false } = Astro.props;
+
+const origin = (Astro.site ?? new URL(SITE.url)).origin;
+// Canonical URLs carry the trailing slash Vercel serves (trailingSlash: true).
+const cleanPath = path === '/' ? '/' : `/${path.replace(/^\/+|\/+$/g, '')}/`;
+const canonical = new URL(cleanPath, origin).href;
+const image = new URL(ogImage, origin).href;
+
+const isHome = cleanPath === '/';
+const fullTitle = isHome ? `${SITE.name} | ${SITE.tagline}` : `${title} | ${SITE.name}`;
+
+const graph = [
+  organizationJsonLd(origin),
+  {
+    '@type': 'WebSite',
+    '@id': `${origin}/#website`,
+    url: `${origin}/`,
+    name: SITE.name,
+    inLanguage: 'fr-FR',
+    publisher: { '@id': `${origin}/#organisation` },
+  },
+  {
+    '@type': 'WebPage',
+    '@id': `${canonical}#page`,
+    url: canonical,
+    name: fullTitle,
+    description,
+    inLanguage: 'fr-FR',
+    isPartOf: { '@id': `${origin}/#website` },
+    about: { '@id': `${origin}/#organisation` },
+  },
+  ...jsonLd,
+];
+
+const ld = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c');
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, follow" />}
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:locale" content={SITE.locale} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={image} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Groupe Berberat Thenot, partenaire transport et logistique depuis 1971" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={image} />
+
+<script type="application/ld+json" is:inline set:html={ld} />

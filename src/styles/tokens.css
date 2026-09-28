@@ -1,0 +1,481 @@
+/* ================================================================== *
+ * Groupe Berberat Thenot: design tokens, fonts, reset, utilities.
+ *
+ * Imported ONCE, by src/layouts/Base.astro. Page builders: do not edit
+ * this file; if you need a change, report it (see DESIGN.md).
+ *
+ * World: a serious family-owned road-transport and logistics group.
+ * Heavy, precise, industrial. White and light grey grounds, deep
+ * charcoal bands, one red accent used sparingly (rules, kicker marks,
+ * the primary button, small marks).
+ *
+ * HARD RULES
+ *  - Never a brand-colour (red/blue/teal) filter or tint over photos.
+ *    Legibility = neutral black gradient (0.35 to 0.7 alpha), a split
+ *    layout, or a solid dark block.
+ *  - Never text-shadow or glow for legibility.
+ *  - No backdrop-filter on fixed elements below 900px.
+ *  - No permanent will-change.
+ * ================================================================== */
+
+/* ---------- Fonts: self-hosted Montserrat, latin subset ---------- */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/montserrat-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/montserrat-latin-500-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/montserrat-latin-700-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/montserrat-latin-800-normal.woff2') format('woff2');
+}
+
+:root {
+  /* ---------- Raw palette ---------- */
+  /* Brand red sampled from the Transports Thenot logo
+     (ressources/assets/PALETTE.md). 4.7:1 on white: fine for large
+     text, graphics, buttons (white on red). For SMALL text on light
+     grounds use --red-text. On dark grounds never set small text in
+     red (3.6:1 on --ink): use a red mark next to light text instead. */
+  --red: #e31e25;
+  --red-hover: #c8161c;
+  --red-press: #ad1318;
+  --red-text: #b5161b; /* 6.6:1 on white, 6.0:1 on --paper-2 */
+
+  --black: #0b0b0b;
+  --ink: #141414; /* dark bands */
+  --ink-2: #1e1e1e; /* raised panels on dark, the Thenot cab black */
+  --ink-3: #2a2a2a;
+  --paper: #ffffff;
+  --paper-2: #f3f3f2; /* light grey sections */
+  --paper-3: #e7e7e5;
+
+  --grey-900: #141414;
+  --grey-700: #3d3d3d;
+  --grey-600: #555555; /* 7.5:1 on white */
+  --grey-500: #6b6b6b; /* 5.3:1 on white */
+  --grey-400: #9a9a9a;
+  --grey-300: #bdbdbd; /* 10:1 on --ink */
+  --grey-200: #d9d9d7;
+  --grey-100: #ececea;
+
+  /* ---------- Semantic (light by default, flipped by .is-dark) ---------- */
+  --bg: var(--paper);
+  --fg: var(--grey-900);
+  --fg-2: var(--grey-600); /* body copy */
+  --fg-muted: var(--grey-500); /* captions */
+  --rule: var(--grey-200);
+  --rule-strong: var(--grey-900);
+  --panel: var(--paper-2);
+  --accent-text: var(--red-text);
+
+  /* Neutral scrims: the ONLY way a photo is darkened. */
+  --scrim-70: rgba(0, 0, 0, 0.7);
+  --scrim-55: rgba(0, 0, 0, 0.55);
+  --scrim-35: rgba(0, 0, 0, 0.35);
+
+  /* ---------- Type ---------- */
+  --font: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-bold: 700;
+  --fw-black: 800;
+
+  /* Fluid scale, 360px to 1440px. */
+  --fs-display: clamp(2.25rem, 1.2rem + 4.6vw, 5.25rem); /* home hero H1 */
+  --fs-h1: clamp(2rem, 1.3rem + 3.1vw, 4rem); /* inner page H1 */
+  --fs-h2: clamp(1.625rem, 1.15rem + 2.1vw, 3rem);
+  --fs-h3: clamp(1.125rem, 1rem + 0.55vw, 1.5rem);
+  --fs-stat: clamp(2.5rem, 1.6rem + 3.9vw, 4.75rem);
+  --fs-lead: clamp(1.0625rem, 0.98rem + 0.38vw, 1.3125rem);
+  --fs-body: clamp(1rem, 0.97rem + 0.12vw, 1.0625rem);
+  --fs-small: 0.875rem;
+  --fs-micro: 0.75rem; /* kickers, labels: uppercase + tracking */
+
+  --lh-tight: 1.02;
+  --lh-heading: 1.12;
+  --lh-body: 1.65;
+  --track-caps: 0.14em;
+  --track-display: -0.01em;
+
+  /* ---------- Spacing (4px base) ---------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+  --section-y: clamp(4rem, 2.6rem + 6.2vw, 8rem);
+  --section-y-tight: clamp(3rem, 2.2rem + 3.5vw, 5rem);
+
+  /* ---------- Layout ---------- */
+  --container: 1200px;
+  --container-wide: 1440px;
+  --container-text: 720px;
+  --gutter: clamp(16px, 4vw, 40px);
+  --nav-h: 72px;
+
+  /* ---------- Radii: square, barely rounded ---------- */
+  --radius-0: 0;
+  --radius-1: 2px;
+  --radius-2: 4px;
+
+  /* ---------- Motion ---------- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-std: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 150ms;
+  --dur: 200ms;
+  --dur-reveal: 500ms;
+  --reveal-shift: 12px;
+
+  /* ---------- Z-index ---------- */
+  --z-nav: 100;
+  --z-menu: 200;
+  --z-skip: 300;
+}
+
+/* Dark surface: flips the semantic tokens. Any section or component can
+   carry .is-dark and all children adapt. */
+.is-dark {
+  --bg: var(--ink);
+  --fg: #ffffff;
+  --fg-2: var(--grey-300);
+  --fg-muted: var(--grey-400);
+  --rule: rgba(255, 255, 255, 0.14);
+  --rule-strong: #ffffff;
+  --panel: var(--ink-2);
+  --accent-text: #ffffff;
+  background: var(--bg);
+  color: var(--fg);
+}
+.is-grey {
+  --bg: var(--paper-2);
+  --panel: var(--paper);
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* ================================================================== *
+ * Reset
+ * ================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  background: var(--paper);
+  scroll-padding-top: calc(var(--nav-h) + 16px);
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+body {
+  min-height: 100vh;
+  font-family: var(--font);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-body);
+  color: var(--fg);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* clip, not hidden: hidden would make body a scroll container and
+     break position: sticky. */
+  overflow-x: clip;
+}
+html.is-locked,
+html.is-locked body {
+  overflow: hidden;
+}
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+img {
+  height: auto;
+}
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+button {
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+  padding: 0;
+}
+h1,
+h2,
+h3,
+h4 {
+  font-weight: var(--fw-black);
+  line-height: var(--lh-heading);
+  overflow-wrap: break-word;
+  hyphens: manual;
+}
+p {
+  text-wrap: pretty;
+}
+strong {
+  font-weight: var(--fw-bold);
+}
+::selection {
+  background: var(--red);
+  color: #fff;
+}
+
+/* ---------- Focus: 2px red outline, offset ---------- */
+:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+.is-dark :focus-visible {
+  outline-color: #ff5a5f; /* brighter red, 5.5:1 on --ink */
+}
+
+/* ================================================================== *
+ * Utilities
+ * ================================================================== */
+.container {
+  width: 100%;
+  max-width: calc(var(--container) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.container--wide {
+  max-width: calc(var(--container-wide) + 2 * var(--gutter));
+}
+.container--text {
+  max-width: calc(var(--container-text) + 2 * var(--gutter));
+}
+
+.section {
+  padding-block: var(--section-y);
+  background: var(--bg);
+  color: var(--fg);
+}
+.section--tight {
+  padding-block: var(--section-y-tight);
+}
+/* Two light sections in a row: separate with a hairline instead of doubling
+   the padding. */
+.section--ruled {
+  border-top: 1px solid var(--rule);
+}
+
+/* Kicker: small uppercase label with a red square mark. */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75em;
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  line-height: 1.4;
+  color: var(--accent-text);
+}
+.kicker::before {
+  content: '';
+  flex: none;
+  width: 0.75em;
+  height: 0.75em;
+  background: var(--red);
+}
+
+/* Headline styles as classes, so the visual level is independent of the
+   document outline. */
+.display,
+.h1,
+.h2,
+.h3 {
+  font-weight: var(--fw-black);
+  text-transform: uppercase;
+  letter-spacing: var(--track-display);
+  color: var(--fg);
+}
+.display {
+  font-size: var(--fs-display);
+  line-height: var(--lh-tight);
+}
+.h1 {
+  font-size: var(--fs-h1);
+  line-height: 1.05;
+}
+.h2 {
+  font-size: var(--fs-h2);
+  line-height: 1.08;
+}
+.h3 {
+  font-size: var(--fs-h3);
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+.lead {
+  font-size: var(--fs-lead);
+  line-height: 1.6;
+  color: var(--fg-2);
+  max-width: 44ch;
+}
+.prose {
+  color: var(--fg-2);
+  max-width: 66ch;
+}
+.prose > * + * {
+  margin-top: 1em;
+}
+.muted {
+  color: var(--fg-muted);
+}
+.small {
+  font-size: var(--fs-small);
+}
+
+/* Thin red rule used under headings and as a section mark. */
+.rule-red {
+  display: block;
+  width: 56px;
+  height: 3px;
+  background: var(--red);
+  border: 0;
+}
+
+/* Arrow text link with a sliding arrow. */
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  min-height: 44px;
+  font-size: var(--fs-small);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--fg);
+}
+.link-arrow svg {
+  width: 1.1em;
+  height: 1.1em;
+  color: var(--red);
+  transition: transform var(--dur) var(--ease-out);
+}
+@media (hover: hover) {
+  .link-arrow:hover svg {
+    transform: translateX(4px);
+  }
+  .link-arrow:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--red);
+  }
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.skip-link {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: var(--z-skip);
+  padding: 12px 18px;
+  background: var(--red);
+  color: #fff;
+  font-weight: var(--fw-bold);
+  text-decoration: none;
+  transform: translateY(-160%);
+}
+.skip-link:focus-visible {
+  transform: none;
+  outline-color: #fff;
+}
+
+/* ---------- Reveal (fade-up 12px / 500ms), JS-gated ----------
+   Content is visible without JS: elements are only hidden once the
+   inline head script has set <html class="js">. reveal.client.ts adds
+   .is-in when the element enters the viewport. */
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(var(--reveal-shift));
+  transition:
+    opacity var(--dur-reveal) var(--ease-out),
+    transform var(--dur-reveal) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+html.js .reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  html.js .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

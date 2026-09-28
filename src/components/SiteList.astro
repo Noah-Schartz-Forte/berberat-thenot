@@ -1,0 +1,123 @@
+---
+// Sites d'exploitation with verified addresses and phones (config SITES).
+//
+//   <SiteList />                          (all verified sites)
+//   <SiteList sites={MAIN_SITES} columns={3} />
+//
+// Props: sites? (Site[], default SITES), columns? (2 | 3, default 3),
+// headingLevel? (3). Each item carries id="site-{id}" for anchors.
+// Only verified data is rendered: a site without a phone shows none.
+import { SITES, type Site } from '../config';
+import Icon from './Icon.astro';
+
+export interface Props {
+  sites?: Site[];
+  columns?: 2 | 3;
+  headingLevel?: 3 | 4;
+}
+
+const { sites = SITES, columns = 3, headingLevel = 3 } = Astro.props;
+const H = headingLevel === 4 ? 'h4' : 'h3';
+---
+
+<ul role="list" class:list={['sites', `sites--${columns}`]}>
+  {
+    sites.map((s, i) => (
+      <li class="site reveal" id={`site-${s.id}`} data-reveal-delay={String((i % columns) * 70)}>
+        <p class="site__dept">
+          {s.address.department} ({s.address.postalCode.slice(0, 2)})
+        </p>
+        <H class="site__name">{s.name}</H>
+        {s.entities.length > 0 && <p class="site__entities">{s.entities.join(' · ')}</p>}
+        <address class="site__addr">
+          <Icon name="pin" size={20} />
+          <span>
+            {s.address.street}
+            <br />
+            {s.address.postalCode} {s.address.locality}
+          </span>
+        </address>
+        {s.phone && (
+          <a class="site__tel" href={s.phone.href}>
+            <Icon name="phone" size={20} />
+            {s.phone.display}
+          </a>
+        )}
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .sites {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 640px) {
+    .sites {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1024px) {
+    .sites--3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .site {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: clamp(1.25rem, 1rem + 1vw, 2rem);
+    background: var(--panel);
+    border-top: 3px solid var(--red);
+    color: var(--fg);
+  }
+  .site__dept {
+    font-size: var(--fs-micro);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--track-caps);
+    text-transform: uppercase;
+    color: var(--fg-muted);
+  }
+  .site__name {
+    font-size: 1.125rem;
+    font-weight: var(--fw-black);
+    line-height: 1.25;
+    text-transform: uppercase;
+  }
+  .site__entities {
+    font-size: var(--fs-small);
+    color: var(--fg-2);
+  }
+  .site__addr {
+    display: flex;
+    gap: 10px;
+    font-style: normal;
+    font-size: var(--fs-small);
+    color: var(--fg-2);
+    line-height: 1.55;
+  }
+  .site__addr :global(svg),
+  .site__tel :global(svg) {
+    flex: none;
+    color: var(--red);
+  }
+  .site__tel {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    margin-top: auto;
+    font-weight: var(--fw-black);
+    font-size: 1.125rem;
+    color: var(--fg);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  @media (hover: hover) {
+    .site__tel:hover {
+      text-decoration: underline;
+      text-decoration-color: var(--red);
+    }
+  }
+</style>

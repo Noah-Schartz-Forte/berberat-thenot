@@ -1,0 +1,167 @@
+---
+// Offer / content card: square, thin rules, red top mark on hover.
+// The whole card is clickable when `href` is set (stretched link on the
+// title link, so screen readers get one clean link).
+//
+//   <Card icon="truck" index="01" title="Transport routier de marchandises"
+//         text="..." items={['Lots complets et partiels', '...']}
+//         href="/transport" linkLabel="Transport" />
+//
+// Props: title, text?, icon? (IconName), index? ("01"), items? (string[],
+// check list), href?, linkLabel? (default "En savoir plus"), headingLevel?
+// (2 | 3, default 3). Default slot: extra content under the text.
+import Icon, { type IconName } from './Icon.astro';
+
+export interface Props {
+  title: string;
+  text?: string;
+  icon?: IconName;
+  index?: string;
+  items?: string[];
+  href?: string;
+  linkLabel?: string;
+  headingLevel?: 2 | 3;
+  class?: string;
+}
+
+const { title, text, icon, index, items, href, linkLabel = 'En savoir plus', headingLevel = 3, class: className } =
+  Astro.props;
+const H = headingLevel === 2 ? 'h2' : 'h3';
+---
+
+<article class:list={['card', href && 'card--link', className]}>
+  <div class="card__top">
+    {icon && <span class="card__icon"><Icon name={icon} size={40} strokeWidth={1.5} /></span>}
+    {index && <span class="card__index" aria-hidden="true">{index}</span>}
+  </div>
+  <H class="card__title">
+    {href ? <a href={href} class="card__link">{title}</a> : title}
+  </H>
+  {text && <p class="card__text">{text}</p>}
+  {
+    items && items.length > 0 && (
+      <ul role="list" class="card__items">
+        {items.map((it) => (
+          <li>
+            <Icon name="check" size={18} strokeWidth={2} />
+            <span>{it}</span>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  <slot />
+  {
+    href && (
+      <span class="card__more" aria-hidden="true">
+        {linkLabel}
+        <Icon name="arrow" size={18} />
+      </span>
+    )
+  }
+</article>
+
+<style>
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: 100%;
+    padding: clamp(1.5rem, 1.2rem + 1.2vw, 2.5rem);
+    background: var(--panel);
+    border-top: 3px solid var(--rule-strong);
+    color: var(--fg);
+    transition:
+      border-color var(--dur) var(--ease-std),
+      background-color var(--dur) var(--ease-std),
+      transform var(--dur-fast) var(--ease-out);
+  }
+  .card__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .card__icon {
+    color: var(--red);
+  }
+  .card__index {
+    font-size: var(--fs-small);
+    font-weight: var(--fw-black);
+    letter-spacing: 0.1em;
+    color: var(--fg-muted);
+  }
+  .card__title {
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-black);
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+  }
+  .card__link {
+    color: inherit;
+    text-decoration: none;
+  }
+  .card__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .card__link:focus-visible {
+    outline: none;
+  }
+  .card--link:has(.card__link:focus-visible) {
+    outline: 2px solid var(--red);
+    outline-offset: 3px;
+  }
+  .card__text {
+    color: var(--fg-2);
+  }
+  .card__items {
+    display: grid;
+    gap: 10px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-medium);
+    color: var(--fg);
+  }
+  .card__items li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .card__items :global(svg) {
+    flex: none;
+    margin-top: 2px;
+    color: var(--red);
+  }
+  .card__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 12px;
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .card__more :global(svg) {
+    color: var(--red);
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .card--link:active {
+    transform: scale(0.99);
+  }
+  @media (hover: hover) {
+    .card--link:hover {
+      border-top-color: var(--red);
+    }
+    .card--link:hover .card__more :global(svg) {
+      transform: translateX(4px);
+    }
+  }
+</style>

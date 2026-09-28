@@ -1,0 +1,73 @@
+---
+// Typographic wordmark: small "GROUPE" above "BERBERAT THENOT" with a red
+// square mark. No group logo exists in the client's material, so this is
+// the group's identity on the site (entity logos stay on their own cards).
+//
+//   <Wordmark />                         (link to home, used by Nav)
+//   <Wordmark href={null} size="lg" />   (plain, e.g. footer or 404)
+export interface Props {
+  href?: string | null;
+  size?: 'md' | 'lg';
+  class?: string;
+}
+const { href = '/', size = 'md', class: className } = Astro.props;
+const Tag = href ? 'a' : 'span';
+---
+
+<Tag
+  href={href ?? undefined}
+  class:list={['wordmark', `wordmark--${size}`, className]}
+  aria-label={href ? 'Groupe Berberat Thenot, accueil' : undefined}
+>
+  <span class="wordmark__mark" aria-hidden="true"></span>
+  <span class="wordmark__text">
+    <span class="wordmark__top">Groupe</span>
+    <span class="wordmark__name">Berberat Thenot</span>
+  </span>
+</Tag>
+
+<style>
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    color: var(--fg);
+    text-decoration: none;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .wordmark__mark {
+    flex: none;
+    width: 14px;
+    height: 34px;
+    background: var(--red);
+  }
+  .wordmark__text {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .wordmark__top {
+    font-size: 0.625rem;
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.42em;
+    color: var(--fg-2);
+  }
+  .wordmark__name {
+    font-size: 1.0625rem;
+    font-weight: var(--fw-black);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  .wordmark--lg .wordmark__mark {
+    width: 18px;
+    height: 44px;
+  }
+  .wordmark--lg .wordmark__top {
+    font-size: 0.75rem;
+  }
+  .wordmark--lg .wordmark__name {
+    font-size: 1.375rem;
+  }
+</style>

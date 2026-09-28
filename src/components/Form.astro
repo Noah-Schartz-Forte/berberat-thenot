@@ -1,0 +1,190 @@
+---
+// Generic form shell for /api/contact. Compose <Field>s in the default slot.
+//
+//   <Form type="devis" id="devis" submitLabel="Envoyer la demande">
+//     <Field name="nom" label="Nom et prénom" required autocomplete="name" />
+//     ...
+//   </Form>
+//
+// Adds automatically: hidden `type`, the `_gotcha` honeypot, the consent
+// checkbox (required by the API), the submit button, and a live status
+// region. Native browser validation applies without JS; form.client.ts
+// switches it off (noValidate) and enhances the form (inline validation, fetch POST, pending,
+// success and error states). Without JS it posts natively to /api/contact.
+//
+// The field names MUST match the API contract (see api/contact.ts and
+// DESIGN.md): devis = societe, nom, email, telephone, besoin, message;
+// candidature = nom, telephone, email, poste, message, cv_url.
+import Button from './Button.astro';
+import Field from './Field.astro';
+import Icon from './Icon.astro';
+import { MAIN_SITES } from '../config';
+
+export interface Props {
+  type: 'devis' | 'candidature';
+  /** Anchor id of the <form>, e.g. "devis" for /contact#devis. */
+  id?: string;
+  submitLabel?: string;
+  successTitle?: string;
+  successText?: string;
+  class?: string;
+}
+
+const {
+  type,
+  id = type,
+  submitLabel = 'Envoyer',
+  successTitle = 'Merci, votre message est bien envoyé.',
+  successText = type === 'devis'
+    ? 'Nous revenons vers vous rapidement pour étudier votre besoin.'
+    : 'Nous étudions votre candidature et revenons vers vous rapidement.',
+  class: className,
+} = Astro.props;
+
+const statusId = `${id}-status`;
+---
+
+<form
+  id={id}
+  class:list={['form', className]}
+  action="/api/contact"
+  method="post"
+  data-form
+  aria-describedby={statusId}
+>
+  <input type="hidden" name="type" value={type} />
+  <div class="form__hp" aria-hidden="true">
+    <label for={`${id}-gotcha`}>Ne pas remplir ce champ</label>
+    <input id={`${id}-gotcha`} type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <div class="form__grid">
+    <slot />
+    <Field name="consent" label="" as="checkbox" required idPrefix={id}>
+      J’accepte que les informations saisies soient utilisées pour traiter ma demande. Voir la <a
+        href="/politique-de-confidentialite">politique de confidentialité</a>.
+    </Field>
+  </div>
+
+  <p class="form__legend"><span aria-hidden="true">*</span> Champs obligatoires</p>
+
+  <div class="form__actions">
+    <Button type="submit" variant="primary" size="lg" icon="arrow" data-form-submit>
+      <span data-form-label>{submitLabel}</span>
+    </Button>
+  </div>
+
+  <div class="form__status" id={statusId} role="status" aria-live="polite" data-form-status hidden></div>
+
+  <div class="form__success" data-form-success hidden tabindex="-1">
+    <Icon name="check" size={28} />
+    <div>
+      <p class="form__success-title">{successTitle}</p>
+      <p>{successText}</p>
+    </div>
+  </div>
+
+  <template data-form-phones>
+    <ul role="list" class="form__phones">
+      {
+        MAIN_SITES.map((s) => (
+          <li>
+            <a href={s.phone!.href}>
+              <strong>{s.phone!.display}</strong>
+              <span>{s.name}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </template>
+</form>
+
+<style>
+  .form {
+    position: relative;
+  }
+  .form__hp {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .form__grid {
+    display: grid;
+    gap: 22px 20px;
+  }
+  @media (min-width: 640px) {
+    .form__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .form__legend {
+    margin-top: 16px;
+    font-size: var(--fs-micro);
+    color: var(--fg-muted);
+  }
+  .form__actions {
+    margin-top: 24px;
+  }
+  .form__status {
+    margin-top: 20px;
+    padding: 16px 18px;
+    border-left: 4px solid var(--red);
+    background: var(--panel);
+    color: var(--fg);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-medium);
+  }
+  .form__status :global(.form__phones) {
+    display: grid;
+    gap: 4px;
+    margin-top: 12px;
+  }
+  .form__status :global(.form__phones a) {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 10px;
+    min-height: 44px;
+    align-content: center;
+    color: var(--fg);
+    text-decoration: none;
+  }
+  .form__status :global(.form__phones strong) {
+    font-size: 1.0625rem;
+    white-space: nowrap;
+  }
+  .form__status :global(.form__phones span) {
+    color: var(--fg-muted);
+    font-weight: var(--fw-regular);
+  }
+  .form__success {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 24px;
+    border-top: 3px solid var(--red);
+    background: var(--panel);
+    color: var(--fg-2);
+  }
+  .form__success[hidden] {
+    display: none;
+  }
+  .form__success :global(svg) {
+    flex: none;
+    color: var(--red);
+  }
+  .form__success-title {
+    margin-bottom: 4px;
+    color: var(--fg);
+    font-weight: var(--fw-black);
+    font-size: 1.125rem;
+  }
+  .form.is-sent .form__grid,
+  .form.is-sent .form__legend,
+  .form.is-sent .form__actions {
+    display: none;
+  }
+</style>

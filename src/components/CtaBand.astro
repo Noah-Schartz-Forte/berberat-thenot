@@ -1,0 +1,142 @@
+---
+// Closing call-to-action band: big question, the three main phone numbers,
+// one button. Put it last on every page, right before the footer.
+//
+//   <CtaBand />
+//   <CtaBand title="Un projet logistique ?" button={{ label: 'Demander un devis', href: '/contact#devis' }} />
+//
+// Props: kicker?, title?, text?, button? ({label, href}), tone? ('light'
+// default | 'grey' | 'dark'), showPhones? (default true).
+import { MAIN_SITES } from '../config';
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+
+export interface Props {
+  kicker?: string;
+  title?: string;
+  text?: string;
+  button?: { label: string; href: string };
+  tone?: 'light' | 'grey' | 'dark';
+  showPhones?: boolean;
+}
+
+const {
+  kicker = 'Contact',
+  title = 'Un besoin de transport ou de logistique ?',
+  text = 'Appelez directement le site le plus proche, ou décrivez votre besoin : nous revenons vers vous rapidement.',
+  button = { label: 'Nous contacter', href: '/contact' },
+  tone = 'light',
+  showPhones = true,
+} = Astro.props;
+const toneClass = tone === 'dark' ? 'is-dark' : tone === 'grey' ? 'is-grey' : '';
+---
+
+<section class:list={['section cta', toneClass]} aria-labelledby="cta-titre">
+  <div class="container cta__grid">
+    <div class="cta__text reveal">
+      <p class="kicker">{kicker}</p>
+      <h2 id="cta-titre" class="h2 cta__title">{title}</h2>
+      <p class="lead cta__lead">{text}</p>
+      <div class="cta__action">
+        <Button href={button.href} variant="primary" size="lg" icon="arrow">{button.label}</Button>
+      </div>
+    </div>
+    {
+      showPhones && (
+        <ul role="list" class="cta__phones reveal" data-reveal-delay="80">
+          {MAIN_SITES.map((s) => (
+            <li>
+              <a href={s.phone!.href} class="cta__phone">
+                <span class="cta__site">
+                  {s.name}
+                  <span class="cta__town">{s.address.locality}</span>
+                </span>
+                <span class="cta__num">
+                  <Icon name="phone" size={20} />
+                  {s.phone!.display}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .cta {
+    border-top: 1px solid var(--rule);
+  }
+  .cta__grid {
+    display: grid;
+    gap: clamp(2.5rem, 2rem + 2vw, 4rem);
+    align-items: end;
+  }
+  @media (min-width: 1024px) {
+    .cta__grid {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      gap: clamp(3rem, 1rem + 5vw, 7rem);
+    }
+  }
+  .cta__title {
+    margin-top: 16px;
+    max-width: 16ch;
+  }
+  .cta__lead {
+    margin-top: 20px;
+  }
+  .cta__action {
+    margin-top: 32px;
+  }
+  .cta__phones {
+    border-top: 2px solid var(--rule-strong);
+  }
+  .cta__phone {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 20px;
+    min-height: 72px;
+    padding-block: 16px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--fg);
+    text-decoration: none;
+  }
+  .cta__site {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .cta__town {
+    font-weight: var(--fw-regular);
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--fg-muted);
+  }
+  .cta__num {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+    font-weight: var(--fw-black);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .cta__num :global(svg) {
+    color: var(--red);
+  }
+  .cta__num {
+    transition: color var(--dur) var(--ease-std);
+  }
+  @media (hover: hover) {
+    .cta__phone:hover .cta__num {
+      color: var(--accent-text);
+    }
+  }
+</style>

@@ -1,0 +1,197 @@
+---
+// Schematic of the group's three départements as three labelled blocks with
+// the verified site towns. NOT a map: no geography, no external embed.
+// Blocks are placed in their rough relative position (Meuse centre-west,
+// Meurthe-et-Moselle east, Haute-Marne south-west).
+//
+//   <DeptSchematic />
+//
+// Two inline SVGs: a wide one (>= 720px) and a stacked one for phones, so
+// the text stays legible at every width. Accessible name + description list
+// every site.
+import { SITES, DEPARTMENTS } from '../config';
+
+export interface Props {
+  caption?: string;
+}
+const { caption } = Astro.props;
+
+const byDept = DEPARTMENTS.map((d) => ({
+  name: d,
+  code: SITES.find((s) => s.address.department === d)?.address.postalCode.slice(0, 2) ?? '',
+  towns: SITES.filter((s) => s.address.department === d).map((s) => ({
+    town: s.address.locality,
+    who: s.name,
+  })),
+}));
+const meuse = byDept[0]!;
+const hm = byDept[1]!;
+const mm = byDept[2]!;
+
+const desc = byDept
+  .map((d) => `${d.name} (${d.code}) : ${d.towns.map((t) => `${t.town}, ${t.who}`).join(' ; ')}`)
+  .join('. ');
+
+// Block geometry, wide layout (viewBox 960 x 440).
+const W = 470;
+const H = 210;
+const wide = [
+  { d: meuse, x: 0, y: 0 },
+  { d: mm, x: 490, y: 0 },
+  { d: hm, x: 0, y: 230 },
+];
+// Stacked layout (viewBox 360 x 3 blocks).
+const SH = 168;
+const stacked = [meuse, mm, hm].map((d, i) => ({ d, x: 0, y: i * (SH + 14) }));
+const stackedH = 3 * SH + 2 * 14;
+---
+
+<figure class="dept">
+  <svg class="dept__wide" viewBox="0 0 960 440" role="img" aria-labelledby="dept-t1 dept-d1">
+    <title id="dept-t1">Schéma des trois départements du groupe</title>
+    <desc id="dept-d1">{desc}</desc>
+    {
+      wide.map(({ d, x, y }) => (
+        <g transform={`translate(${x} ${y})`}>
+          <rect class="dept__box" width={W} height={H} />
+          <rect class="dept__bar" width={W} height="5" />
+          <text class="dept__name" x="28" y="52">{d.name.toUpperCase()}</text>
+          <text class="dept__code" x={W - 28} y="70" text-anchor="end">{d.code}</text>
+          {d.towns.map((t, i) => (
+            <g transform={`translate(28 ${100 + i * 44})`}>
+              <rect class="dept__dot" y="-11" width="10" height="10" />
+              <text class="dept__town" x="22" y="0">{t.town}</text>
+              <text class="dept__who" x="22" y="20">{t.who}</text>
+            </g>
+          ))}
+        </g>
+      ))
+    }
+    <g transform="translate(490 230)">
+      <rect class="dept__box dept__box--dark" width={W} height={H} />
+      <text class="dept__big" x="28" y="92">3</text>
+      <text class="dept__bigl" x="88" y="72">DÉPARTEMENTS</text>
+      <text class="dept__bigs" x="88" y="94">Meuse, Haute-Marne,</text>
+      <text class="dept__bigs" x="88" y="116">Meurthe-et-Moselle</text>
+      <text class="dept__big" x="28" y="178">7</text>
+      <text class="dept__bigl" x="88" y="168">SITES D’EXPLOITATION</text>
+    </g>
+  </svg>
+
+  <svg class="dept__stacked" viewBox={`0 0 360 ${stackedH}`} role="img" aria-labelledby="dept-t2 dept-d2">
+    <title id="dept-t2">Schéma des trois départements du groupe</title>
+    <desc id="dept-d2">{desc}</desc>
+    {
+      stacked.map(({ d, x, y }) => (
+        <g transform={`translate(${x} ${y})`}>
+          <rect class="dept__box" width="360" height={SH} />
+          <rect class="dept__bar" width="360" height="4" />
+          <text class="dept__name dept__name--s" x="20" y="40">{d.name.toUpperCase()}</text>
+          <text class="dept__code dept__code--s" x="340" y="46" text-anchor="end">{d.code}</text>
+          {d.towns.map((t, i) => (
+            <g transform={`translate(20 ${80 + i * 44})`}>
+              <rect class="dept__dot" y="-10" width="9" height="9" />
+              <text class="dept__town dept__town--s" x="19" y="0">{t.town}</text>
+              <text class="dept__who dept__who--s" x="19" y="19">{t.who}</text>
+            </g>
+          ))}
+        </g>
+      ))
+    }
+  </svg>
+  {caption && <figcaption class="dept__caption">{caption}</figcaption>}
+</figure>
+
+<style>
+  .dept {
+    margin: 0;
+  }
+  .dept svg {
+    width: 100%;
+    height: auto;
+    font-family: var(--font);
+  }
+  .dept__wide {
+    display: none;
+  }
+  @media (min-width: 720px) {
+    .dept__wide {
+      display: block;
+    }
+    .dept__stacked {
+      display: none;
+    }
+  }
+  .dept__box {
+    fill: var(--panel);
+    stroke: var(--rule);
+    stroke-width: 1;
+  }
+  .dept__box--dark {
+    fill: var(--ink);
+    stroke: none;
+  }
+  .dept__bar,
+  .dept__dot {
+    fill: var(--red);
+  }
+  .dept__name {
+    font-size: 22px;
+    font-weight: 800;
+    fill: var(--fg);
+    letter-spacing: 0.02em;
+  }
+  .dept__name--s {
+    font-size: 17px;
+  }
+  .dept__code {
+    font-size: 64px;
+    font-weight: 800;
+    fill: var(--grey-200);
+  }
+  .dept__code--s {
+    font-size: 40px;
+  }
+  .dept__town {
+    font-size: 18px;
+    font-weight: 700;
+    fill: var(--fg);
+  }
+  .dept__town--s {
+    font-size: 16px;
+  }
+  .dept__who {
+    font-size: 14px;
+    font-weight: 500;
+    fill: var(--fg-muted);
+  }
+  .dept__who--s {
+    font-size: 13px;
+  }
+  .dept__big {
+    font-size: 72px;
+    font-weight: 800;
+    fill: #fff;
+  }
+  .dept__bigl {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    fill: #fff;
+  }
+  .dept__bigs {
+    font-size: 14px;
+    fill: var(--grey-300);
+  }
+  :global(.is-dark) .dept__code {
+    fill: var(--ink-3);
+  }
+  :global(.is-dark) .dept__box--dark {
+    fill: var(--black);
+  }
+  .dept__caption {
+    margin-top: 12px;
+    font-size: var(--fs-small);
+    color: var(--fg-muted);
+  }
+</style>

@@ -1,0 +1,158 @@
+---
+// Button / link-button.
+//
+//   <Button href="/contact#devis">Demander un devis</Button>
+//   <Button href="/le-groupe" variant="outline" icon="arrow">Découvrir le groupe</Button>
+//   <Button type="submit" variant="primary" data-submit>Envoyer</Button>
+//
+// Variants
+//   primary  red fill, white text (the one strong call to action per view)
+//   dark     charcoal fill, white text (on light grounds)
+//   outline  1.5px border in currentColor, transparent (works on dark and light)
+//   link     text link, uppercase, red arrow
+//
+// With `href` it renders an <a>, otherwise a <button> (type="button" unless
+// given). Extra attributes (data-*, aria-*, target, rel) are passed through.
+import Icon, { type IconName } from './Icon.astro';
+
+export interface Props {
+  href?: string;
+  variant?: 'primary' | 'dark' | 'outline' | 'link';
+  size?: 'md' | 'lg';
+  icon?: IconName;
+  type?: 'button' | 'submit' | 'reset';
+  class?: string;
+  full?: boolean;
+  [key: string]: unknown;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  icon,
+  type = 'button',
+  class: className,
+  full = false,
+  ...rest
+} = Astro.props;
+
+const trailing = icon ?? (variant === 'link' ? 'arrow' : undefined);
+const classes = ['btn', `btn--${variant}`, `btn--${size}`, full && 'btn--full', className];
+---
+
+{
+  href ? (
+    <a href={href} class:list={classes} {...rest}>
+      <span class="btn__label"><slot /></span>
+      {trailing && <Icon name={trailing} size={18} class="btn__icon" />}
+    </a>
+  ) : (
+    <button type={type} class:list={classes} {...rest}>
+      <span class="btn__label"><slot /></span>
+      {trailing && <Icon name={trailing} size={18} class="btn__icon" />}
+    </button>
+  )
+}
+
+<style>
+  .btn {
+    --btn-bg: transparent;
+    --btn-fg: var(--fg);
+    --btn-border: transparent;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75em;
+    min-height: 48px;
+    padding: 0.8em 1.5em;
+    border: 1.5px solid var(--btn-border);
+    border-radius: var(--radius-1);
+    background: var(--btn-bg);
+    color: var(--btn-fg);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.08em;
+    line-height: 1.2;
+    text-transform: uppercase;
+    text-decoration: none;
+    text-align: center;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--dur) var(--ease-std),
+      border-color var(--dur) var(--ease-std),
+      color var(--dur) var(--ease-std),
+      transform var(--dur-fast) var(--ease-out);
+  }
+  .btn--lg {
+    min-height: 56px;
+    padding: 1em 1.9em;
+  }
+  .btn--full {
+    width: 100%;
+  }
+  .btn:active {
+    transform: scale(0.98);
+  }
+  .btn__icon {
+    flex: none;
+    transition: transform var(--dur) var(--ease-out);
+  }
+
+  .btn--primary {
+    --btn-bg: var(--red);
+    --btn-fg: #fff;
+    --btn-border: var(--red);
+  }
+  .btn--dark {
+    --btn-bg: var(--ink);
+    --btn-fg: #fff;
+    --btn-border: var(--ink);
+  }
+  .btn--outline {
+    --btn-fg: var(--fg);
+    --btn-border: currentColor;
+  }
+  .btn--link {
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    gap: 0.5em;
+  }
+  .btn--link .btn__icon {
+    color: var(--red);
+  }
+
+  @media (hover: hover) {
+    .btn--primary:hover {
+      --btn-bg: var(--red-hover);
+      --btn-border: var(--red-hover);
+    }
+    .btn--dark:hover {
+      --btn-bg: var(--ink-3);
+      --btn-border: var(--ink-3);
+    }
+    .btn--outline:hover {
+      --btn-bg: var(--fg);
+      --btn-fg: var(--bg);
+      --btn-border: var(--fg);
+    }
+    .btn:hover .btn__icon {
+      transform: translateX(3px);
+    }
+    .btn--link:hover .btn__label {
+      text-decoration: underline;
+      text-decoration-color: var(--red);
+      text-underline-offset: 0.3em;
+    }
+  }
+  .btn--primary:active {
+    --btn-bg: var(--red-press);
+  }
+  .btn[disabled],
+  .btn[aria-disabled='true'] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+</style>
