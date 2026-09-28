@@ -3,7 +3,7 @@
 // one button. Put it last on every page, right before the footer.
 //
 //   <CtaBand />
-//   <CtaBand title="Un projet logistique ?" button={{ label: 'Demander un devis', href: '/contact#devis' }} />
+//   <CtaBand title="Un projet logistique\u00A0?" button={{ label: 'Demander un devis', href: '/contact#devis' }} />
 //
 // Props: kicker?, title?, text?, button? ({label, href}), tone? ('light'
 // default | 'grey' | 'dark'), showPhones? (default true).
@@ -23,7 +23,7 @@ export interface Props {
 const {
   kicker = 'Contact',
   title = 'Un besoin de transport ou de logistique ?',
-  text = 'Appelez directement le site le plus proche, ou décrivez votre besoin : nous revenons vers vous rapidement.',
+  text = 'Appelez directement le site le plus proche, ou décrivez votre besoin : nous revenons vers vous rapidement.',
   button = { label: 'Nous contacter', href: '/contact' },
   tone = 'light',
   showPhones = true,

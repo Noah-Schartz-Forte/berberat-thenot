@@ -247,6 +247,9 @@ const hasSlot = Astro.slots.has('default');
     font-weight: var(--fw-bold);
     color: var(--red-text);
   }
+  .field__error[hidden] {
+    display: none;
+  }
   .field__error::before {
     content: '';
     flex: none;

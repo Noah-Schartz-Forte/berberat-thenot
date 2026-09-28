@@ -23,8 +23,8 @@ export interface Props {
 
 const { items, tone = 'dark', chip, title = 'Chiffres clés' } = Astro.props;
 const NNBSP = ' ';
-const fmt = (s: Stat) =>
-  `${s.group ? String(s.value).replace(/\B(?=(\d{3})+(?!\d))/g, NNBSP) : String(s.value)}${s.suffix ?? ''}`;
+// Number only: the suffix is rendered in its own smaller span.
+const fmt = (s: Stat) => (s.group ? String(s.value).replace(/\B(?=(\d{3})+(?!\d))/g, NNBSP) : String(s.value));
 const toneClass = tone === 'dark' ? 'is-dark' : tone === 'grey' ? 'is-grey' : '';
 ---
 
@@ -35,9 +35,7 @@ const toneClass = tone === 'dark' ? 'is-dark' : tone === 'grey' ? 'is-grey' : ''
         items.map((s, i) => (
           <li class:list={['stats__item reveal', s.group && 'stats__item--wide']} data-reveal-delay={String(i * 60)}>
             <span class="stats__value">
-              <span data-countup={s.value} data-countup-group={s.group ? '' : undefined}>
-                {fmt(s)}
-              </span>
+              <span data-countup={s.value} data-countup-group={s.group ? '' : undefined}>{fmt(s)}</span>
               {s.suffix && <span class="stats__suffix">{s.suffix}</span>}
             </span>
             <span class="stats__label">{s.label}</span>
@@ -108,6 +106,9 @@ const toneClass = tone === 'dark' ? 'is-dark' : tone === 'grey' ? 'is-grey' : ''
     }
     .stats__label {
       max-width: 15ch;
+    }
+    .stats__item--wide .stats__label {
+      max-width: 24ch;
     }
   }
   .stats__value {

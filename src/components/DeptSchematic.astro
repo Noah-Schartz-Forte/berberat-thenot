@@ -29,7 +29,7 @@ const hm = byDept[1]!;
 const mm = byDept[2]!;
 
 const desc = byDept
-  .map((d) => `${d.name} (${d.code}) : ${d.towns.map((t) => `${t.town}, ${t.who}`).join(' ; ')}`)
+  .map((d) => `${d.name} (${d.code}) : ${d.towns.map((t) => `${t.town}, ${t.who}`).join(' ; ')}`)
   .join('. ');
 
 // Block geometry, wide layout (viewBox 960 x 440).

@@ -18,7 +18,7 @@ const MESSAGES = {
   select: 'Choisissez une option.',
   email: 'Adresse e-mail invalide, par exemple nom@entreprise.fr.',
   tel: 'Numéro de téléphone invalide.',
-  url: 'Lien invalide : il doit commencer par https://',
+  url: 'Lien invalide : il doit commencer par https://',
   minlength: (n: number) => `Écrivez au moins ${n} caractères.`,
   consent: 'Merci d’accepter le traitement de vos données pour envoyer le formulaire.',
   network: 'Connexion impossible. Vérifiez votre connexion ou appelez-nous directement.',

@@ -99,7 +99,7 @@ const firstPhone = MAIN_SITES[0]!.phone!;
   .nav__links ul {
     display: flex;
     align-items: center;
-    gap: clamp(14px, 1.3vw, 24px);
+    gap: clamp(10px, -34px + 3.4vw, 24px);
   }
   .nav__links a {
     position: relative;
@@ -108,7 +108,7 @@ const firstPhone = MAIN_SITES[0]!.phone!;
     min-height: 44px;
     font-size: 0.75rem;
     font-weight: var(--fw-bold);
-    letter-spacing: 0.06em;
+    letter-spacing: 0.03em;
     text-transform: uppercase;
     text-decoration: none;
     white-space: nowrap;
@@ -288,6 +288,13 @@ const firstPhone = MAIN_SITES[0]!.phone!;
 
   /* ---------- Desktop ---------- */
   @media (min-width: 1280px) {
+    .nav__bar {
+      gap: 16px;
+      padding-inline: 24px;
+    }
+    .nav__cta {
+      padding: 0 14px;
+    }
     .nav__links {
       display: block;
     }
@@ -298,6 +305,9 @@ const firstPhone = MAIN_SITES[0]!.phone!;
   }
 
   /* ---------- No JS: links wrap under the bar, no burger ---------- */
+  :global(html:not(.js)) .nav {
+    position: relative;
+  }
   :global(html:not(.js)) .nav__toggle,
   :global(html:not(.js)) .nav__panel {
     display: none;
@@ -319,6 +329,7 @@ const firstPhone = MAIN_SITES[0]!.phone!;
       height: auto;
       min-height: var(--nav-h);
       row-gap: 0;
+      padding-top: 12px;
     }
   }
 </style>

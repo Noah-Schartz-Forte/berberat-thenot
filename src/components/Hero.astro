@@ -65,10 +65,12 @@ const widths = HERO_WIDTHS.filter((w) => w <= image.width);
     <div class="hero__content">
       {
         badge && (
-          <a class="hero__badge" href={badgeHref}>
-            <span class="hero__badge-mark" aria-hidden="true" />
-            {badge}
-          </a>
+          <div class="hero__badge-row">
+            <a class="hero__badge" href={badgeHref}>
+              <span class="hero__badge-mark" aria-hidden="true" />
+              {badge}
+            </a>
+          </div>
         )
       }
       {kicker && <p class="kicker hero__kicker">{kicker}</p>}
@@ -110,6 +112,10 @@ const widths = HERO_WIDTHS.filter((w) => w <= image.width);
     position: absolute;
     inset: 0;
     z-index: -1;
+  }
+  .hero__media :global(picture) {
+    display: block;
+    height: 100%;
   }
   .hero__media :global(img) {
     width: 100%;
@@ -163,6 +169,7 @@ const widths = HERO_WIDTHS.filter((w) => w <= image.width);
     background: var(--red);
   }
   .hero__kicker {
+    display: flex;
     color: #fff;
     margin-bottom: 20px;
   }

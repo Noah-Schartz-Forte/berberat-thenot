@@ -120,7 +120,7 @@ const candidatureSchema = z.object({
   cv_url: z.preprocess(
     emptyToUndefined,
     z
-      .url({ protocol: /^https?$/, error: 'Lien invalide : il doit commencer par https://' })
+      .url({ protocol: /^https?$/, error: 'Lien invalide : il doit commencer par https://' })
       .max(500, { error: 'Lien trop long.' })
       .optional()
   ),
@@ -179,7 +179,7 @@ function rateLimited(ip: string): boolean {
 function buildEmail(data: Payload): { subject: string; text: string } {
   const lines: string[] = [];
   const add = (label: string, value: string | undefined) => {
-    if (value) lines.push(`${label} : ${value}`);
+    if (value) lines.push(`${label} : ${value}`);
   };
   if (data.type === 'devis') {
     add('Société', data.societe);
@@ -187,7 +187,7 @@ function buildEmail(data: Payload): { subject: string; text: string } {
     add('E-mail', data.email);
     add('Téléphone', data.telephone);
     add('Besoin', BESOINS[data.besoin]);
-    lines.push('', 'Message :', data.message);
+    lines.push('', 'Message :', data.message);
     lines.push('', 'Demande de devis envoyée depuis le site du Groupe Berberat Thenot.');
     return { subject: `[Devis] ${BESOINS[data.besoin]}, ${data.societe ?? data.nom}`, text: lines.join('\n') };
   }
@@ -196,7 +196,7 @@ function buildEmail(data: Payload): { subject: string; text: string } {
   add('E-mail', data.email);
   add('Poste visé', POSTES[data.poste]);
   add('CV (lien)', data.cv_url);
-  if (data.message) lines.push('', 'Message :', data.message);
+  if (data.message) lines.push('', 'Message :', data.message);
   lines.push('', 'Candidature envoyée depuis le site du Groupe Berberat Thenot.');
   return { subject: `[Candidature] ${POSTES[data.poste]}, ${data.nom}`, text: lines.join('\n') };
 }
