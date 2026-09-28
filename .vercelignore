@@ -1,0 +1,25 @@
+# What NOT to upload to Vercel.
+#
+# The CLI does not honour .gitignore, so without this it would push
+# node_modules, the client's source material (PDF + raw extractions) and the
+# local screenshot archive. Vercel installs dependencies and runs the build
+# itself.
+#
+# EVERY PATTERN IS ANCHORED WITH A LEADING SLASH. Without it a pattern matches
+# at any depth: a bare `scripts` would also exclude src/scripts/, which strips
+# the client modules and fails the build with
+#   [UNRESOLVED_IMPORT] Could not resolve '../scripts/app.client'
+
+/node_modules
+/dist
+/.astro
+/.git
+
+# Local-only working material, never part of the deployed site.
+/ressources
+/screenshots
+/scripts
+
+.env
+.env.*
+.DS_Store

@@ -1,0 +1,35 @@
+# Groupe Berberat Thenot
+
+> Groupe familial français de transport routier de marchandises, de logistique et de services associés, implanté en Meuse, Haute-Marne et Meurthe-et-Moselle. Partenaire transport et logistique depuis 1971, membre du Groupement FLO (France Lots Organisation).
+
+## Chiffres clés
+- 110 collaborateurs
+- 90 moteurs
+- 20 000 m² de stockage intérieur
+- 7 sites d'exploitation, parking sécurisé
+- 3 départements : Meuse, Haute-Marne, Meurthe-et-Moselle
+
+## Les six sociétés du groupe
+- Transports Berberat (1971) : transport routier de marchandises, Meuse. Tél. 03 29 78 78 78
+- Transports Thenot (2007) : transport routier de marchandises. Tél. 03 29 70 10 10
+- Berberat Thenot Expertise (BTE) : transport de proximité, certifié ISO 9001 (industrie, grande distribution, matériaux de construction). Tél. 03 25 55 84 07
+- Berberat Thenot Logistique (BTL) : logistique et entreposage (Bettancourt-la-Ferrée et Saint-Dizier)
+- Logistique Gardiennage Services (LGS) : logistique, gardiennage, services. Tél. 03 51 25 52 83
+- Eurocap Transports : affrètement et organisation de transports (Pompey)
+
+## Histoire
+1971 : Transports Berberat Père et Fils. 2007 : Transports Thenot. 2012 : association des deux entreprises, création de Berberat Thenot Logistique et de Berberat Thenot Expertise. Aujourd'hui : 20 000 m² de logistique, 90 moteurs, 7 sites d'exploitation, parking sécurisé.
+
+## Pages
+- [Accueil](https://berberat-thenot.vercel.app/)
+- [Le groupe](https://berberat-thenot.vercel.app/le-groupe/)
+- [Histoire](https://berberat-thenot.vercel.app/histoire/)
+- [Transport](https://berberat-thenot.vercel.app/transport/)
+- [Logistique](https://berberat-thenot.vercel.app/logistique/)
+- [Services](https://berberat-thenot.vercel.app/services/)
+- [Moyens](https://berberat-thenot.vercel.app/moyens/)
+- [Groupement FLO](https://berberat-thenot.vercel.app/groupement-flo/)
+- [Recrutement](https://berberat-thenot.vercel.app/recrutement/)
+- [Contact](https://berberat-thenot.vercel.app/contact/)
+
+Contact : par téléphone ou via le formulaire de la page Contact.
